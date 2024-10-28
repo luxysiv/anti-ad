@@ -8,7 +8,7 @@
 // @match        *://linkads.xyz/*
 // @grant        none
 // @run-at       document-start
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=phimnhanhz.com
+// @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/phimnhanh.png
 // ==/UserScript==
 
 (function() {
