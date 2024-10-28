@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         BongdaPlus Ad Blocker
 // @namespace    luxysiv
-// @version      1.0
+// @version      1.1
 // @description  Hide specified ad elements on bongdaplus.vn for a cleaner experience.
 // @author       Mạnh Dương
 // @match        *://bongdaplus.vn/*
 // @grant        none
 // @run-at       document-start
-// @icon         https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://bongdaplus.vn&size=64
+// @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/bongdaplus.png
 // ==/UserScript==
 
 (function() {
