@@ -15,6 +15,7 @@
 
     // Full list of selectors for ad elements to be hidden and removed from the DOM
     const adSelectors = [
+        '.banner-top-home.banner-ads.section-ads-top.section',
         '.js_installvneapp.installvneapp--small.installvneapp',
         '#banner_top',
         '.bottom.icon-podcast-pin',
