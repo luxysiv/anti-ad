@@ -7,7 +7,7 @@
 // @match        *://phimmoichill.io/*
 // @grant        none
 // @run-at       document-start
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=phimmoichill.io
+// @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/phimmoichill.png
 // ==/UserScript==
 
 (function() {
