@@ -7,7 +7,7 @@
 // @match        https://game4u.mobi/*
 // @grant        none
 // @run-at       document-start
-// @icon         https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://game4u.mobi&size=64
+// @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/game4u.png
 // ==/UserScript==
 
 
