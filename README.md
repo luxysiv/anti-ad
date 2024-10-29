@@ -10,3 +10,4 @@
 
 [VNExpress](https://github.com/luxysiv/anti-ads/raw/refs/heads/main/vnexpress.user.js)
 
+[Anti-popup](https://github.com/luxysiv/anti-ads/raw/refs/heads/main/popupblocker.user.js)
