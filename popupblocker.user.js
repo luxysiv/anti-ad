@@ -2,7 +2,7 @@
 // @name         Ultra Popup Blocker (No Notification)
 // @description  Configurable popup blocker that blocks all popup windows by default, without notification.
 // @namespace    luxysiv
-// @version      1.1
+// @version      1.2
 // @author       Mạnh Dương
 // @include      *
 // @grant        GM.getValue
@@ -32,43 +32,12 @@ const FakeWindow = {
   focus: () => false
 }
 
-/* Domain Management */
-class DomainManager {
-  static async getCurrentTopDomain () {
-    const [domainName, topLevelDomain] = document.location.hostname.split('.').slice(-2)
-    return `${domainName}.${topLevelDomain}`
-  }
-
-  static async isCurrentDomainTrusted () {
-    const domain = await this.getCurrentTopDomain()
-    return await GM.getValue(domain)
-  }
-
-  static async addTrustedDomain (domain) {
-    await GM.setValue(domain, true)
-  }
-
-  static async removeTrustedDomain (domain) {
-    await GM.deleteValue(domain)
-  }
-
-  static async getTrustedDomains () {
-    return await GM.listValues()
-  }
-}
-
 /* Popup Blocker */
 class PopupBlocker {
   static async initialize () {
     if (global.open !== realWindowOpen) return;
 
-    if (await DomainManager.isCurrentDomainTrusted()) {
-      const domain = await DomainManager.getCurrentTopDomain();
-      console.log(`[UPB] Trusted domain: ${domain}`);
-      global.open = realWindowOpen;
-      return;
-    }
-
+    // Block all popups
     global.open = (url, target, features) => {
       global.upbCounter++;
       console.log(`[UPB] Popup blocked: ${url}`);
@@ -79,4 +48,3 @@ class PopupBlocker {
 
 /* Initialize */
 window.addEventListener('load', () => PopupBlocker.initialize());
-GM.registerMenuCommand('Ultra Popup Blocker: Trusted domains', () => new TrustedDomainsModal().show());
