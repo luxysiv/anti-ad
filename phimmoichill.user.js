@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Phimmoichill Block Ads
 // @namespace    luxysiv
-// @version      2.1
+// @version      2.2
 // @description  Hide ads phimmoichill
 // @author       Mạnh Dương
 // @match        *://phimmoichill.biz/*
-// @grant        none
+// @grant        GM_addStyle
 // @run-at       document-start
 // @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/phimmoichill.png
 // ==/UserScript==
@@ -16,7 +16,7 @@
     // Set cookie with key 'popupOpened' and value 'true'
     document.cookie = "popupOpened=true; path=/;";
 
-    // List of selectors for ad elements to be hidden and removed from the DOM
+    // List of selectors for ad elements to be hidden
     const adSelectors = [
         '.hidedesktop > center > a',
         '#botplayeradsmb',
@@ -31,6 +31,12 @@
         '#pmadv',
         'div[id="chilladv"]'
     ];
+
+    // Create a CSS string to hide ad elements
+    const hideCSS = adSelectors.join(', ') + ' { display: none !important; }';
+    
+    // Apply the styles immediately
+    GM_addStyle(hideCSS);
 
     // Function to hide and remove ad elements
     function hideAndRemoveAds() {
