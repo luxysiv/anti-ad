@@ -4,7 +4,7 @@
 // @version      2.0
 // @description  Hide ads phimmoichill
 // @author       Mạnh Dương
-// @match        *://phimmoichill.io/*
+// @match        *://phimmoichill.biz/*
 // @grant        none
 // @run-at       document-start
 // @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/phimmoichill.png
