@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         VNExpress Comprehensive Ad Blocker
 // @namespace    luxysiv
-// @version      1.3
+// @version      1.4
 // @description  Hide all specified ads and elements on VNExpress website for a cleaner view.
 // @author       Mạnh Dương
 // @match        *://vnexpress.net/*
-// @grant        none
+// @grant        GM_addStyle
 // @run-at       document-start
 // @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/vnexpress.png
 // ==/UserScript==
@@ -54,11 +54,16 @@
         'div[id="box_register_mail"]'
     ];
 
+    // Create a CSS string to hide elements
+    const hideCSS = adSelectors.join(', ') + ' { display: none !important; }';
+    
+    // Apply the styles immediately
+    GM_addStyle(hideCSS);
+
     // Function to hide and remove specified ad elements from the DOM
     const hideElements = () => {
         adSelectors.forEach(selector => {
             document.querySelectorAll(selector).forEach(element => {
-                element.style.display = 'none'; // Hide the element immediately
                 setTimeout(() => element.remove(), 0); // Remove it from the DOM after hiding
                 console.log(`Hidden and removed element: ${selector}`);
             });
