@@ -1,91 +1,57 @@
 // ==UserScript==
 // @name         VNExpress Comprehensive Ad Blocker
 // @namespace    luxysiv
-// @version      1.4
-// @description  Hide all specified ads and elements on VNExpress website for a cleaner view.
+// @version      2.0
+// @description  Hide all specified ads and elements on VNExpress
 // @author       Mạnh Dương
 // @match        *://vnexpress.net/*
-// @grant        GM_addStyle
+// @grant        none
 // @run-at       document-start
-// @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/vnexpress.png
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    // Full list of selectors for ad elements to be hidden and removed from the DOM
-    const adSelectors = [
-        '.banner-top-home.banner-ads.section-ads-top.section',
-        '.js_installvneapp.installvneapp--small.installvneapp',
-        '#banner_top',
-        '.bottom.icon-podcast-pin',
-        '.list_stream_thuongvien.width_common > section.section_ads_300x250.box_category_v2.section > .banner_mobile_300x250 > .inner_ads > .width_common.ads_content',
-        'section.section_ads_300x250.box_category_v2.section:nth-of-type(1)',
-        'section.section_ads_300x250.box_category_v2.section:nth-of-type(3)',
-        '#newsletters > .box-newsletters.box-300.box-newsletter-vne',
-        '.wrapper-ads',
-        'section.section_ads_300x250.box_category_v2.section:nth-of-type(6)',
-        '.vne_footer_ads.section_ads_300x250.box_category_v2.box_category.section > .banner_mobile_300x250 > .inner_ads > .width_common.ads_content',
-        '.vne_footer_ads.section_ads_300x250.box_category_v2.box_category.section',
-        '#footer > div.width_common.coppy_right_info > .vne_app.app_info.width_common',
-        '#box_register_mail_footer_mb > .wrap',
-        '#box_register_mail > .wrap',
-        '.width_common.ads_content',
-        '.banner_mobile_300x250',
-        'section.section_ads_300x250.box_category_v2.section:nth-of-type(19)',
-        '.box-raovat-v2.box-category',
-        '.button-adblock',
-        'div.wrap-hd-adblock',
-        'a[id="podcastIcon"]',
-        'section[id="sync_bgu_and_masthead"]',
-        'section[class="section box_category_v2 section_ads_300x250"]',
-        'a[id="button-adblock"]',
-        'div[class="inner_section section_wrap_poll mb20"]',
-        '#footer > .width_common.coppy_right_info > .vne_app.app_info.width_common > .app-ns.left',
-        '#footer > .width_common.coppy_right_info > .vne_app.app_info.width_common > .app-vm.right > [href^="https://play.google.com/store/apps/details"]',
-        '#footer > .width_common.coppy_right_info > .vne_app.app_info.width_common > p.right > [href^="https://play.google.com/store/apps/details"]',
-        '#footer > .width_common.coppy_right_info > .vne_app.app_info.width_common > p.left > [href^="https://play.google.com/store/apps/details"]',
-        '#footer > .width_common.coppy_right_info > .vne_app.app_info.width_common',
-        '#footer > .width_common.coppy_right_info > .contact_info.width_common > .ads_btn.guitoasoan_btn',
-        '#footer > .width_common.coppy_right_info > .contact_info.width_common > .vlight.guitoasoan_btn',
-        'div.width_common.menu_grid2:nth-of-type(3)',
-        '.bottom.icon-podcast-pin',
-        '#newsletters > .box-newsletters.box-300.box-newsletter-vne',
-        'div[id="box_register_mail"]'
-    ];
-
-    // Create a CSS string to hide elements
-    const hideCSS = adSelectors.join(', ') + ' { display: none !important; }';
-    
-    // Apply the styles immediately
-    GM_addStyle(hideCSS);
-
-    // Function to hide and remove specified ad elements from the DOM
-    const hideElements = () => {
-        adSelectors.forEach(selector => {
-            document.querySelectorAll(selector).forEach(element => {
-                setTimeout(() => element.remove(), 0); // Remove it from the DOM after hiding
-                console.log(`Hidden and removed element: ${selector}`);
-            });
-        });
-    };
-
-    // Function to initialize MutationObserver after document.body is available
-    const initObserver = () => {
-        if (document.body) {
-            const observer = new MutationObserver(hideElements);
-            observer.observe(document.body, { childList: true, subtree: true });
-
-            // Trigger hideElements on key page events to ensure full coverage
-            hideElements(); // Initial call
-            window.addEventListener('DOMContentLoaded', hideElements);
-            window.addEventListener('load', hideElements);
-            window.addEventListener('pageshow', hideElements);
-        } else {
-            setTimeout(initObserver, 100); // Retry if document.body isn't ready
+    // CSS rules to hide adblock button, overlay, and additional ad sections
+    const css = `
+        .ads,
+        .mb20,
+        .gopy-vne,
+        .banner-ads,
+        .article_ads,
+        .button-adblock,
+        .guitoasoan_btn,
+        .wrap-hd-adblock,
+        .section-ads-top,
+        .icon-podcast-pin,
+        .slide-banner-ads,
+        .box-newsletter-vne,
+        .downloadapp.contact,
+        .section_ads_300x250,
+        .installvneapp--small,
+        .social_info.width_common,
+        .box-ebank-qt.box-category,
+        .contact_info.width_common,
+        .box-news-other-site.container,
+        .vne_app.app_info.width_common,
+        .clearfix.box_300_targer.section,
+        .coppy_right_info.width_common.newsletter_sidebar,
+        .width_common.coppy_right_info.newsletters_footer_mb,
+        div.width_common.menu_grid2:nth-of-type(3),
+        ul.list-menu-footer:nth-of-type(5),
+        div.width_common.menu_grid2:nth-of-type(25),
+        #banner_top,
+        #box-raovat-v2-home-pc.box-raovat-v2.box-category,
+        #raovat.box_category_v2.box_category.section,
+        #footer > div.width_common.coppy_right_info > .vne_app.app_info.width_common {
+            display: none !important;
         }
-    };
+    `;
 
-    // Start observing
-    initObserver();
+    // Create a <style> element
+    const style = document.createElement('style');
+    style.textContent = css;
+
+    // Inject the style into the HTML head to ensure persistence even when cached
+    document.documentElement.appendChild(style);
 })();
