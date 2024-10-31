@@ -7,7 +7,7 @@
 // @match        *://vnexpress.net/*
 // @grant        none
 // @run-at       document-start
-/ @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/vnexpress.png
+// @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/vnexpress.png
 // ==/UserScript==
 
 (function() {
