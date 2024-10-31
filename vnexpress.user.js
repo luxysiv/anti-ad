@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         VNExpress Comprehensive Ad Blocker
 // @namespace    luxysiv
-// @version      2.0
+// @version      2.1
 // @description  Hide all specified ads and elements on VNExpress
 // @author       Mạnh Dương
 // @match        *://vnexpress.net/*
 // @grant        none
 // @run-at       document-start
+/ @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/vnexpress.png
 // ==/UserScript==
 
 (function() {
