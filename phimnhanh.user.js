@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Phimnhanh Ad Blocker
 // @namespace    luxysiv
-// @version      2.1
+// @version      2.0
 // @description  Phimnhanh Ad Blocker & Remove Video Ads
 // @author       Mạnh Dương
 // @match        *://phimnhanhz.com/*
@@ -14,18 +14,12 @@
 (function() {
     'use strict';
 
-    // Function to remove all target="_blank" links
-    function removeBlankLinks() {
-        document.querySelectorAll('a[target="_blank"]').forEach(link => {
-            link.remove();
-        });
-    }
-
     // Ad selectors to target on phimnhanhz.com
     const adSelectors = [
         "#popup-giua-man-hinh",
         ".banner-top",
         "#container-ads",
+        "a[target='_blank']"
     ];
 
     // Function to hide ads by applying inline styles
@@ -44,10 +38,7 @@
 
     // Set up MutationObserver to detect dynamically added ad elements
     function startObservingAds() {
-        const observer = new MutationObserver(() => {
-            hideAds();
-            removeBlankLinks();
-        });
+        const observer = new MutationObserver(hideAds);
         observer.observe(document.body, { childList: true, subtree: true });
     }
 
@@ -65,15 +56,13 @@
         }
     }
 
-    // Run functions immediately at document-start
+    // Run both functions immediately at document-start
     hideAds();
-    removeBlankLinks();
     extractVideoLink();
 
     // Set up MutationObserver after DOM is ready
     document.addEventListener('DOMContentLoaded', () => {
         hideAds();
-        removeBlankLinks();
         extractVideoLink();
         startObservingAds();  // Begin observing DOM changes
     });
@@ -81,12 +70,10 @@
     // Extra triggers to ensure functions run on load and cache reloads
     window.addEventListener('load', () => {
         hideAds();
-        removeBlankLinks();
         extractVideoLink();
     });
     window.addEventListener('pageshow', () => {
         hideAds();
-        removeBlankLinks();
         extractVideoLink();
     });
 
