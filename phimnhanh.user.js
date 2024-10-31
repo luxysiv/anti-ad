@@ -7,6 +7,7 @@
 // @match        *://linkads.xyz/*
 // @grant        GM_addStyle
 // @run-at       document-start
+// @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/phimnhanh.png
 // ==/UserScript==
 
 (function() {
