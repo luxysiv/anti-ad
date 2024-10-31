@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         BongdaPlus Ad Blocker
 // @namespace    luxysiv
-// @version      1.1
+// @version      1.2
 // @description  Hide specified ad elements on bongdaplus.vn for a cleaner experience.
 // @author       Mạnh Dương
 // @match        *://bongdaplus.vn/*
-// @grant        none
+// @grant        GM_addStyle
 // @run-at       document-start
 // @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/bongdaplus.png
 // ==/UserScript==
@@ -29,11 +29,16 @@
         '.mix-predict'
     ];
 
+    // Create a CSS string to hide elements
+    const hideCSS = adSelectors.join(', ') + ' { display: none !important; }';
+
+    // Apply the styles immediately
+    GM_addStyle(hideCSS);
+
     // Function to hide and remove specified elements from the DOM
     const hideElements = () => {
         adSelectors.forEach(selector => {
             document.querySelectorAll(selector).forEach(element => {
-                element.style.display = 'none'; // Hide the element immediately
                 setTimeout(() => element.remove(), 0); // Remove it from the DOM after hiding
                 console.log(`Hidden and removed element: ${selector}`);
             });
