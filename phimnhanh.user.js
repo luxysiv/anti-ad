@@ -1,80 +1,64 @@
 // ==UserScript==
-// @name         Phimnhanh Ad Blocker
+// @name         Enhanced Ad Blocker & Video Redirector
 // @namespace    luxysiv
-// @version      2.0
-// @description  Phimnhanh Ad Blocker & Remove Video Ads
-// @author       Mạnh Dương
+// @version      3.0
+// @description  Block ads, remove popups, and redirect video links efficiently
 // @match        *://phimnhanhz.com/*
 // @match        *://linkads.xyz/*
-// @grant        none
+// @grant        GM_addStyle
 // @run-at       document-start
-// @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/phimnhanh.png
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    // Ad selectors to target on phimnhanhz.com
-    const adSelectors = [
-        "#popup-giua-man-hinh",
-        ".banner-top",
-        "#container-ads",
-        "a[target='_blank']"
-    ];
+    // Add CSS to immediately hide ads upon page load
+    GM_addStyle(`
+        #popup-giua-man-hinh, 
+        .banner-top, 
+        #container-ads, 
+        .ad-container, 
+        .watch-banner-1, 
+        .watch-banner-2 {
+            display: none !important;
+            visibility: hidden !important;
+        }
+    `);
 
-    // Function to hide ads by applying inline styles
-    function hideAds() {
-        adSelectors.forEach(selector => {
-            document.querySelectorAll(selector).forEach(ad => {
-                ad.style.display = 'none';
-                ad.style.visibility = 'hidden';
-                ad.style.height = '0';
-                ad.style.width = '0';
-                ad.style.overflow = 'hidden';
-                console.log(`Ad hidden: ${selector}`);
-            });
-        });
-    }
-
-    // Set up MutationObserver to detect dynamically added ad elements
-    function startObservingAds() {
-        const observer = new MutationObserver(hideAds);
-        observer.observe(document.body, { childList: true, subtree: true });
-    }
-
-    // Redirect to video link on linkads.xyz if present
-    function extractVideoLink() {
+    // Function to redirect to the video link if on linkads.xyz
+    function redirectVideoLink() {
         if (window.location.hostname === "linkads.xyz") {
             const urlParams = new URLSearchParams(window.location.search);
             const videoLink = urlParams.get('link');
             if (videoLink) {
-                console.log("Redirecting to video link...");
-                window.location.href = decodeURIComponent(videoLink);
-            } else {
-                console.log("Video link not found.");
+                window.location.href = decodeURIComponent(videoLink); // Redirect to the decoded video link
             }
         }
     }
 
-    // Run both functions immediately at document-start
-    hideAds();
-    extractVideoLink();
+    // Call the redirect function if necessary
+    redirectVideoLink();
 
-    // Set up MutationObserver after DOM is ready
+    // Function to remove remaining ad elements and observe for new ads
+    function removeAds() {
+        const adSelectors = [
+            '#popup-giua-man-hinh', 
+            '.banner-top', 
+            '#container-ads', 
+            '.ad-container', 
+            '.watch-banner-1', 
+            '.watch-banner-2'
+        ];
+        // Remove each ad element that matches the selectors
+        adSelectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(ad => ad.remove());
+        });
+    }
+
+    // Set up MutationObserver to watch for ad changes in the DOM
+    const observer = new MutationObserver(removeAds);
     document.addEventListener('DOMContentLoaded', () => {
-        hideAds();
-        extractVideoLink();
-        startObservingAds();  // Begin observing DOM changes
+        removeAds(); // Remove ads when DOM is fully loaded
+        observer.observe(document.body, { childList: true, subtree: true }); // Observe changes in the body
     });
-
-    // Extra triggers to ensure functions run on load and cache reloads
-    window.addEventListener('load', () => {
-        hideAds();
-        extractVideoLink();
-    });
-    window.addEventListener('pageshow', () => {
-        hideAds();
-        extractVideoLink();
-    });
-
 })();
