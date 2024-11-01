@@ -1,11 +1,10 @@
 // ==UserScript==
 // @name         Phimmoichill Block Ads
 // @namespace    luxysiv
-// @version      2.2
-// @description  Hide ads phimmoichill
+// @version      2.3
+// @description  Hide ads on phimmoichill.biz
 // @author       Mạnh Dương
 // @match        *://phimmoichill.biz/*
-// @grant        GM_addStyle
 // @run-at       document-start
 // @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/phimmoichill.png
 // ==/UserScript==
@@ -16,41 +15,20 @@
     // Set cookie with key 'popupOpened' and value 'true'
     document.cookie = "popupOpened=true; path=/;";
 
-    // List of selectors for ad elements to be hidden
-    const adSelectors = [
-        '.hidedesktop > center > a',
-        '#botplayeradsmb',
-        '#pcads',
-        '#chilladv',
-        '[href="javascript:an_catfish()"]',
-        '#mobiads',
-        '#download',
-        '.off-ads',
-        '#headermbads',
-        '#headerpcads',
-        '#pmadv',
-        'div[id="chilladv"]'
-    ];
-
-    // Create a CSS string to hide ad elements
-    const hideCSS = adSelectors.join(', ') + ' { display: none !important; }';
-    
-    // Apply the styles immediately
-    GM_addStyle(hideCSS);
-
-    // Function to hide and remove ad elements
-    function hideAndRemoveAds() {
-        adSelectors.forEach(selector => {
-            document.querySelectorAll(selector).forEach(adElement => {
-                adElement.style.display = 'none';
-                adElement.style.visibility = 'hidden';
-                adElement.style.height = '0';
-                adElement.style.width = '0';
-                adElement.style.overflow = 'hidden';
-                console.log(`Hidden and removed ad element: ${selector}`);
-            });
-        });
-    }
+    // Inject CSS to hide ad elements
+    const css = `
+        .off-ads,
+        .banner-ads,
+        #mobiads,
+        #an_catfish,
+        #headermbads,
+        #botplayeradsmb {
+           display: none !important;
+        }
+    `;
+    const style = document.createElement('style');
+    style.textContent = css;
+    document.documentElement.appendChild(style);
 
     // Function to block any connections to 'raw.githubusercontent.com'
     const blockURL = 'raw.githubusercontent.com';
@@ -75,45 +53,25 @@
         return originalXHR.apply(this, arguments);
     };
 
-    // Block the creation of <video>, <audio>, <img> elements with URLs from raw.githubusercontent.com
-    function blockMediaElements() {
-        document.querySelectorAll('video, audio, img').forEach(media => {
-            if (media.src && media.src.includes(blockURL)) {
-                console.log('Blocked media:', media.src);
-                media.src = '';  // Clear the URL
-                media.pause && media.pause();
-            }
-        });
-    }
+    // Block media elements and observe new ones
+    function blockMediaAndObserve() {
+        function blockMediaElements() {
+            document.querySelectorAll('video, audio, img').forEach(media => {
+                if (media.src && media.src.includes(blockURL)) {
+                    console.log('Blocked media:', media.src);
+                    media.src = '';
+                    media.pause && media.pause();
+                }
+            });
+        }
 
-    // Use MutationObserver to monitor for new ad elements
-    function startObservingAds() {
-        const observer = new MutationObserver(() => {
-            hideAndRemoveAds();
-            blockMediaElements();
-        });
+        blockMediaElements();
+
+        // Observe new ad elements or media elements
+        const observer = new MutationObserver(blockMediaElements);
         observer.observe(document.body, { childList: true, subtree: true });
     }
 
-    // Initial actions at document-start
-    hideAndRemoveAds();
-    blockMediaElements();
-
-    // Deferred actions for document-idle
-    document.addEventListener('DOMContentLoaded', () => {
-        hideAndRemoveAds();
-        blockMediaElements();
-        startObservingAds();
-    });
-
-    // Extra triggers for complete blocking on load and cache reloads
-    window.addEventListener('load', () => {
-        hideAndRemoveAds();
-        blockMediaElements();
-    });
-    window.addEventListener('pageshow', () => {
-        hideAndRemoveAds();
-        blockMediaElements();
-    });
-
+    // Run block and observe on DOMContentLoaded
+    document.addEventListener('DOMContentLoaded', blockMediaAndObserve);
 })();
