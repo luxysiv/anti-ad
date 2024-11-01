@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Phimnhanh Ad Blocker
 // @namespace    luxysiv
-// @version      3.1
+// @version      3.2
 // @description  Phimnhanh Ad Blocker & Remove Video Ads
 // @match        *://phimnhanhz.com/*
 // @match        *://linkads.xyz/*
@@ -29,8 +29,7 @@
     style.textContent = css;
 
     // Inject the style into the HTML head to ensure persistence even when cached
-    document.documentElement.appendChild(style);
-    
+    document.documentElement.appendChild(style);    
     
     // Function to redirect to the video link if on linkads.xyz
     function redirectVideoLink() {
@@ -45,7 +44,4 @@
 
     // Call the redirect function if necessary
     redirectVideoLink();
-
-
-
 })();
