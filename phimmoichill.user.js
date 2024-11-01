@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Phimmoichill Block Ads
 // @namespace    luxysiv
-// @version      2.3
-// @description  Hide ads on phimmoichill.biz
+// @version      2.4
+// @description  Hide ads on phimmoichill.biz and prevent loading of raw GitHub resources
 // @author       Mạnh Dương
 // @match        *://phimmoichill.biz/*
 // @run-at       document-start
@@ -23,55 +23,67 @@
         #an_catfish,
         #headermbads,
         #botplayeradsmb {
-           display: none !important;
+            display: none !important;
         }
     `;
     const style = document.createElement('style');
     style.textContent = css;
     document.documentElement.appendChild(style);
 
-    // Function to block any connections to 'raw.githubusercontent.com'
+    // Function to block connections to 'raw.githubusercontent.com'
     const blockURL = 'raw.githubusercontent.com';
-    function interceptRequest(url) {
-        if (url.includes(blockURL)) {
-            console.log('Blocking connection to:', url);
-            throw new Error('Blocked URL');
-        }
-    }
 
-    // Block fetch requests
+    // Intercept and block fetch requests
     const originalFetch = window.fetch;
     window.fetch = function(url, ...args) {
-        interceptRequest(url);
-        return originalFetch.apply(this, arguments);
+        if (url.includes(blockURL)) {
+            console.log('Blocking fetch request to:', url);
+            return Promise.reject(new Error('Blocked URL')); // Block the request
+        }
+        return originalFetch.apply(this, arguments); // Allow other requests
     };
 
-    // Block XMLHttpRequest
+    // Intercept and block XMLHttpRequest
     const originalXHR = window.XMLHttpRequest.prototype.open;
     window.XMLHttpRequest.prototype.open = function(method, url, ...args) {
-        interceptRequest(url);
-        return originalXHR.apply(this, arguments);
+        if (url.includes(blockURL)) {
+            console.log('Blocking XMLHttpRequest to:', url);
+            throw new Error('Blocked URL'); // Block the request
+        }
+        return originalXHR.apply(this, arguments); // Allow other requests
     };
 
-    // Block media elements and observe new ones
-    function blockMediaAndObserve() {
-        function blockMediaElements() {
-            document.querySelectorAll('video, audio, img').forEach(media => {
-                if (media.src && media.src.includes(blockURL)) {
-                    console.log('Blocked media:', media.src);
-                    media.src = '';
-                    media.pause && media.pause();
-                }
-            });
-        }
-
-        blockMediaElements();
-
-        // Observe new ad elements or media elements
-        const observer = new MutationObserver(blockMediaElements);
-        observer.observe(document.body, { childList: true, subtree: true });
+    // Function to block media elements from loading
+    function blockMediaElements() {
+        document.querySelectorAll('video, audio, img').forEach(media => {
+            if (media.src && media.src.includes(blockURL)) {
+                console.log('Blocked media:', media.src);
+                media.src = ''; // Clear the source
+                media.pause && media.pause(); // Pause media if applicable
+            }
+        });
     }
 
-    // Run block and observe on DOMContentLoaded
-    document.addEventListener('DOMContentLoaded', blockMediaAndObserve);
+    // Function to block script and link elements that may load raw.githubusercontent.com
+    function blockScriptAndLinkElements() {
+        document.querySelectorAll('script[src], link[href]').forEach(element => {
+            if ((element.src && element.src.includes(blockURL)) || 
+                (element.href && element.href.includes(blockURL))) {
+                console.log('Blocking script or link to:', element.src || element.href);
+                element.parentNode.removeChild(element); // Remove the element from the DOM
+            }
+        });
+    }
+
+    // Observe the document to block new elements
+    const observer = new MutationObserver(() => {
+        blockMediaElements();
+        blockScriptAndLinkElements();
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Run blocking immediately on script load
+    blockMediaElements();
+    blockScriptAndLinkElements();
 })();
