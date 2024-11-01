@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BongdaPlus Ad Blocker
 // @namespace    luxysiv
-// @version      1.2
+// @version      2.0
 // @description  Hide specified ad elements on bongdaplus.vn for a cleaner experience.
 // @author       Mạnh Dương
 // @match        *://bongdaplus.vn/*
@@ -13,54 +13,53 @@
 (function() {
     'use strict';
 
-    // List of selectors for elements to be hidden and removed from the DOM
-    const adSelectors = [
-        'div.hide-w',
-        'div.mix-story',
-        'div.mix-tips.tip-hot',
-        'div.mix-tags',
-        'div.small.fst.news:nth-of-type(1)',
-        'div.small.fst.news:nth-of-type(3)',
-        'div.row:nth-of-type(17)',
-        'div.row:nth-of-type(15)',
-        'div.clx:nth-of-type(16)',
-        'div.clz:nth-of-type(7)',
-        '.mix-stars',
-        '.mix-predict'
-    ];
+    // CSS rules to hide specific sections initially if they are likely to contain "Góc check var"
+    const css = `
+    .clz,
+    .relates,
+    .tip-lst,
+    .mix-tags,
+    .mix-story,
+    .mix-stars,
+    .mix-specs,
+    .email-box,
+    .mix-predict,
+    .tx-cen.emobar,
+    #aplbshare.prescript,
+    div.clz:nth-of-type(1),
+    div.clx:nth-of-type(14),
+    div.clx:nth-of-type(16),
+    div.row:nth-of-type(15),
+    div.row:nth-of-type(17) {
+        display: none !important;
+    }
+    `;
 
-    // Create a CSS string to hide elements
-    const hideCSS = adSelectors.join(', ') + ' { display: none !important; }';
+    // Add initial CSS
+    const style = document.createElement('style');
+    style.textContent = css;
+    document.documentElement.appendChild(style);
 
-    // Apply the styles immediately
-    GM_addStyle(hideCSS);
+    // Function to selectively remove elements containing "Góc check var"
+    function removeGocCheckVarElements() {
+        // Select only specific elements to check for "Góc check var"
+        const elements = document.querySelectorAll('a, li, div, section');
 
-    // Function to hide and remove specified elements from the DOM
-    const hideElements = () => {
-        adSelectors.forEach(selector => {
-            document.querySelectorAll(selector).forEach(element => {
-                setTimeout(() => element.remove(), 0); // Remove it from the DOM after hiding
-                console.log(`Hidden and removed element: ${selector}`);
-            });
+        elements.forEach(element => {
+            // Check if "goc-check-var" is in the href or text content
+            if ((element.href && element.href.includes("goc-check-var")) || 
+                element.textContent.includes("Góc check var")) {
+                // Remove only the closest container of type li, div, or section
+                const closestContainer = element.closest('li, div, section');
+                if (closestContainer) {
+                    closestContainer.remove();
+                } else {
+                    element.remove();
+                }
+            }
         });
-    };
+    }
 
-    // Function to initialize MutationObserver after document.body is available
-    const initObserver = () => {
-        if (document.body) {
-            const observer = new MutationObserver(hideElements);
-            observer.observe(document.body, { childList: true, subtree: true });
-
-            // Trigger hideElements on key page events to ensure full coverage
-            hideElements(); // Initial call
-            window.addEventListener('DOMContentLoaded', hideElements);
-            window.addEventListener('load', hideElements);
-            window.addEventListener('pageshow', hideElements);
-        } else {
-            setTimeout(initObserver, 100); // Retry if document.body isn't ready
-        }
-    };
-
-    // Start observing
-    initObserver();
+    // Run the function after the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', removeGocCheckVarElements);
 })();
