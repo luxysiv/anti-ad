@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Phimnhanh Ad Blocker
 // @namespace    luxysiv
-// @version      3.2
+// @version      3.2.1
 // @description  Phimnhanh Ad Blocker & Remove Video Ads
 // @match        *://phimnhanhz.com/*
 // @match        *://linkads.xyz/*
@@ -14,11 +14,8 @@
 
     // CSS rules to hide adblock button, overlay, and additional ad sections
     const css = ` 
-        .banner-top, 
-        .ad-container, 
-        .watch-banner-1, 
-        .watch-banner-2,
-        #container-ads,
+        .banner-top,
+        .ad-container,
         #popup-giua-man-hinh {
            display: none !important;
         }
