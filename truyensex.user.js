@@ -19,11 +19,7 @@
         center,
         #qccat,
         #qctop,
-        .ad-banner,
-        .advertisement,
-        .ads,
-        [style*="display: none"],
-        [style*="display:none"] {
+        .dulieu {
             display: none !important;
         }
 
