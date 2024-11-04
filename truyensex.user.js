@@ -13,56 +13,13 @@
 (function() {
     'use strict';
 
-    // CSS rules to hide ad elements, increase font size, and add text indentation for readability
+    // CSS rules to hide adblock button, overlay, and additional ad sections
     const css = `
-        /* Hide ads */
         center,
         #qccat,
         #qctop,
         .dulieu {
             display: none !important;
-        }
-
-        /* Base font size and line height */
-        body, p, h1, h2, h3, h4, h5, h6, div {
-            font-size: 1.1em; /* Use relative font size */
-            line-height: 1.6; /* Use relative line height */
-        }
-
-        /* Add responsive indentation */
-        .content, .post-content, p, div {
-            margin-left: 1em; /* Use relative margin */
-            margin-right: 1em; /* Use relative margin */
-            text-indent: 0.5em; /* Use relative text indent */
-        }
-
-        /* Ensure any nested text in divs also inherits the font size */
-        div * {
-            font-size: inherit !important; /* Inherit the font size */
-        }
-
-        /* Media queries for responsive design */
-        @media (max-width: 600px) {
-            body, p, h1, h2, h3, h4, h5, h6, div {
-                font-size: 0.9em; /* Slightly smaller font for small screens */
-            }
-            .content, .post-content, p, div {
-                margin-left: 0.5em; /* Less margin on small screens */
-                margin-right: 0.5em; /* Less margin on small screens */
-                text-indent: 0.5em; /* Keep text indent consistent */
-            }
-        }
-
-        @media (min-width: 601px) and (max-width: 900px) {
-            body, p, h1, h2, h3, h4, h5, h6, div {
-                font-size: 1em; /* Adjust font for medium screens */
-            }
-        }
-
-        @media (min-width: 901px) {
-            body, p, h1, h2, h3, h4, h5, h6, div {
-                font-size: 1.2em; /* Larger font for larger screens */
-            }
         }
     `;
 
