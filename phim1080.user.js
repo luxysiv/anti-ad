@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         Phim 1080 Ad Blocker
 // @namespace    luxysiv
-// @version      1.0
+// @version      1.1
 // @description  Block ads on phim 1080
 // @author       Mạnh Dương
 // @match        *://phim1080.in/*
 // @grant        none
 // @run-at       document-start
-// @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/vnexpress.png
+// @icon         https://phim1080.in/favicon.ico
 // ==/UserScript==
 
 (function() {
