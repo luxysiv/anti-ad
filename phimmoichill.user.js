@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Phimmoichill Block Ads
 // @namespace    luxysiv
-// @version      2.4
+// @version      2.5
 // @description  Hide ads on phimmoichill.biz and prevent loading of raw GitHub resources
 // @author       Mạnh Dương
 // @match        *://phimmoichill.biz/*
@@ -19,6 +19,7 @@
     const css = `
         .off-ads,
         .banner-ads,
+        .hidemobile,
         #mobiads,
         #an_catfish,
         #headermbads,
