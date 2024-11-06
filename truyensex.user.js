@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Truyen sex - Ad Block, Font Increase, and Indentation
 // @namespace    luxysiv
-// @version      1.8
+// @version      1.8.1
 // @description  Block ads, increase font size, and add indentation on truyensex.moe for better readability without dark mode styling enabled
 // @author       Mạnh Dương
 // @match        *://truyensex.moe/*
+// @match        *://truyensextv1.com/*
 // @grant        none
 // @run-at       document-start
 // @icon         https://truyensex.moe/favicon.ico
