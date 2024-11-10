@@ -6,7 +6,7 @@
 // @match        *://phimnhanhz.com/*
 // @match        *://linkads.xyz/*
 // @run-at       document-start
-// @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/phimnhanh.png
+// @icon         https://phimnhanhz.com/wp-content/themes/phimnhanh/img/favicon.ico
 // ==/UserScript==
 
 (function() {
