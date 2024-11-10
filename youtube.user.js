@@ -16,7 +16,7 @@
         #offer-module,
         #masthead-ad,
         .ytp-featured-product,
-        #.ytp-suggested-action > button.ytp-suggested-action-badge {
+        .ytp-suggested-action > button.ytp-suggested-action-badge {
             display: none !important;
         }
     `;
