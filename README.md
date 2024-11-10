@@ -15,3 +15,5 @@
 [Anti-popup](https://github.com/luxysiv/anti-ads/raw/refs/heads/main/popupblocker.user.js)
 
 [Truyensex](https://github.com/luxysiv/anti-ads/raw/refs/heads/main/truyensex.user.js)
+
+[YouTube](https://github.com/luxysiv/anti-ads/raw/refs/heads/main/youtube.user.js)
