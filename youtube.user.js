@@ -1,40 +1,42 @@
 // ==UserScript==
 // @name         YouTube Auto Skip and Fast-Forward Ads
-// @namespace    http://tampermonkey.net/
-// @version      1.5
+// @namespace    luxysiv
+// @version      1.6
 // @description  Automatically jumps to the end of ads on YouTube without affecting main videos
 // @match        *://*.youtube.com/*
+// @author       Mạnh Dương
 // @grant        none
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    // Hàm kiểm tra và xử lý quảng cáo
+    // Function to check and process ads
     function checkAndSkipAds() {
         const video = document.querySelector('video');
         const skipButton = document.querySelector('.ytp-ad-skip-button');
         const adOverlay = document.querySelector('.ytp-ad-player-overlay, .ytp-ad-player-overlay-layout__player-card-container');
 
         if (video) {
-            // Kiểm tra nếu video là quảng cáo (có overlay hoặc nút bỏ qua quảng cáo)
+            // Check if the video is an ad (has an overlay or a skip ad button)
             if ((adOverlay && adOverlay.style.display !== 'none') || skipButton) {
-                // Nhảy đến cuối quảng cáo để bỏ qua
+                // Jump to end of ad to skip
                 if (video.currentTime < video.duration) {
-                    video.currentTime = video.duration; // Nhảy đến cuối quảng cáo
-                    console.log("Đã nhảy đến cuối quảng cáo");
+                    video.muted = true;  //Mute ad video
+                    video.currentTime = video.duration; // Skip to end of ad
+                    console.log("Skip to end of ad");
                 }
             }
         }
 
-        // Tự động nhấn nút "Bỏ qua quảng cáo" nếu có
+        // Automatically press "Skip Ad" button if available
         if (skipButton) {
             skipButton.click();
-            console.log("Đã bỏ qua quảng cáo");
+            console.log("Ad skipped");
         }
     }
 
-    // Sử dụng MutationObserver để phát hiện thay đổi trong DOM
+    // Using MutationObserver to detect changes in the DOM
     const observer = new MutationObserver(() => {
         checkAndSkipAds();
     });
