@@ -5,7 +5,6 @@
 // @description  Hide specified ad elements on bongdaplus.vn for a cleaner experience.
 // @author       Mạnh Dương
 // @match        *://bongdaplus.vn/*
-// @grant        GM_addStyle
 // @run-at       document-start
 // @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/bongdaplus.png
 // ==/UserScript==
