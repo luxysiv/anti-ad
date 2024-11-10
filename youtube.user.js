@@ -97,8 +97,19 @@
         'ytm-promoted-video-renderer'
     ];
 
-    const adOverlaySelectors = ['.ytp-ad-player-overlay', '.ytp-ad-player-overlay-layout__player-card-container'];
-    const skipButtonSelectors = ['.ytp-ad-skip-button', '.ytp-ad-skip-button-modern', '.ytp-ad-skip-button-container'];
+    const adOverlaySelectors = [
+        '.ytp-ad-player-overlay',
+        '.ytp-ad-player-overlay-layout__ad-info-container',
+        '.ytp-ad-player-overlay-layout__player-card-container',
+        '.ytp-ad-player-overlay-layout__skip-or-preview-container',
+        '.ytp-ad-player-overlay-layout__ad-disclosure-banner-container'        
+    ];
+    
+    const skipButtonSelectors = [
+        '.ytp-ad-skip-button',
+        '.ytp-ad-skip-button-modern',
+        '.ytp-ad-skip-button-container'
+    ];
 
     function injectCSS() {
         const style = document.createElement('style');
