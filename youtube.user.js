@@ -6,6 +6,7 @@
 // @match        *://*.youtube.com/*
 // @run-at       document-start
 // @grant        none
+// @icon         https://m.youtube.com/static/logos/favicon.ico
 // ==/UserScript==
 
 (function() {
