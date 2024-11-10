@@ -11,6 +11,23 @@
 (function() {
     'use strict';
 
+    // CSS rules to hide adblock button, overlay, and additional ad sections
+    const css = `
+        #offer-module,
+        #masthead-ad,
+        .ytp-featured-product,
+        #.ytp-suggested-action > button.ytp-suggested-action-badge {
+            display: none !important;
+        }
+    `;
+
+    // Create a <style> element
+    const style = document.createElement('style');
+    style.textContent = css;
+
+    // Inject the style into the HTML head to ensure persistence even when cached
+    document.documentElement.appendChild(style);
+
     // Array of ad overlay CSS class selectors
     const adOverlayClasses = [
         '.ytp-ad-player-overlay',
