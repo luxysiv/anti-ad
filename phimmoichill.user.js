@@ -6,7 +6,7 @@
 // @author       Mạnh Dương
 // @match        *://phimmoichill.biz/*
 // @run-at       document-start
-// @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/phimmoichill.png
+// @icon         https://phimmoichill.biz/favicon.ico
 // ==/UserScript==
 
 (function() {
