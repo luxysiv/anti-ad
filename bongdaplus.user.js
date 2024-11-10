@@ -6,7 +6,7 @@
 // @author       Mạnh Dương
 // @match        *://bongdaplus.vn/*
 // @run-at       document-start
-// @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/bongdaplus.png
+// @icon         https://bongdaplus.vn/favicon.ico
 // ==/UserScript==
 
 (function() {
