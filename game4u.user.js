@@ -7,7 +7,7 @@
 // @match        https://game4u.mobi/*
 // @grant        none
 // @run-at       document-start
-// @icon         https://raw.githubusercontent.com/luxysiv/favicon/refs/heads/main/game4u.png
+// @icon         https://game4u.mobi/wp-content/themes/game4u-v3/favicon.ico
 // ==/UserScript==
 
 
