@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Auto Skip and Fast-Forward Ads
 // @namespace    luxysiv
-// @version      2.3.1
+// @version      2.3.2
 // @description  Automatically skips and jumps to the end of ads on YouTube without affecting main videos
 // @match        *://*.youtube.com/*
 // @run-at       document-start
@@ -123,7 +123,6 @@
         const adOverlay = document.querySelector(adOverlaySelectors.join(', '));
 
         if (video && ((adOverlay && adOverlay.style.display !== 'none') || skipButton)) {
-            video.muted = true;
             video.currentTime = video.duration;
         }
         if (skipButton) skipButton.click();
