@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Auto Skip, Mute Ads
 // @namespace    luxysiv
-// @version      2.6.6
+// @version      2.6.5
 // @description  Automatically skips, mutes ads on YouTube
 // @author       Mạnh Dương
 // @match        *://*.youtube.com/*
@@ -48,7 +48,7 @@
 
     // Function to check and handle ads based on the 'ad-showing' status of the video player
     function checkAndHandleAds() {
-        const player = document.querySelector('#movie_player');
+        const player = document.querySelector('.html5-video-player');
         const video = document.querySelector('video');
         const skipButton = document.querySelector(skipButtonSelectors.join(', '));
 
@@ -71,47 +71,4 @@
     }
 
     initObserver(); // Start the observer immediately
-
-    // Block ads by setting `google_ad_status` to '1'
-    Object.defineProperty(window, 'google_ad_status', { get: () => '1' });
-
-    // Disable the `web_bind_fetch` flag
-    if (window.yt && window.yt.config_ && window.yt.config_.EXPERIMENT_FLAGS) {
-        Object.defineProperty(window.yt.config_.EXPERIMENT_FLAGS, 'web_bind_fetch', { get: () => false });
-    }
-
-    // Block ad placements in `ytInitialPlayerResponse`
-    Object.defineProperty(window, 'ytInitialPlayerResponse', {
-        get: function() {
-            const originalResponse = {};
-            originalResponse.adPlacements = undefined;
-            return originalResponse;
-        }
-    });
-
-    // Remove ad-related JSON fields in XHR responses
-    const open = XMLHttpRequest.prototype.open;
-    XMLHttpRequest.prototype.open = function(method, url) {
-        if (/\/playlist\?list=|\/player(?!.*(get_drm_license))|watch\?[tv]=/.test(url)) {
-            this.addEventListener('load', function() {
-                try {
-                    const response = JSON.parse(this.responseText);
-                    if (response && typeof response === 'object') {
-                        delete response.playerResponse?.adPlacements;
-                        delete response.playerResponse?.playerAds;
-                        delete response.playerResponse?.adSlots;
-                        delete response.adPlacements;
-                        delete response.playerAds;
-                        delete response.adSlots;
-                        
-                        Object.defineProperty(this, 'responseText', { value: JSON.stringify(response) });
-                    }
-                } catch (e) {
-                    console.error("Failed to parse and prune ad JSON:", e);
-                }
-            });
-        }
-        open.apply(this, arguments);
-    };
-
 })();
