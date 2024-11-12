@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Auto Skip, Mute Ads
 // @namespace    luxysiv
-// @version      2.6.4
+// @version      2.6.5
 // @description  Automatically skips, mutes ads on YouTube
 // @author       Mạnh Dương
 // @match        *://*.youtube.com/*
@@ -60,8 +60,6 @@
                 video.currentTime = video.duration || 9999; // Fast-forward to the end of the ad
 
                 if (skipButton) skipButton.click(); // Click the "Skip Ad" button if it exists
-            } else if (!isAdPlaying && video.muted) {
-                video.muted = false; // Unmute when the ad ends
             }
         }
     }
