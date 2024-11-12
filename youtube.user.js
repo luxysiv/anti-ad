@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Auto Skip, Mute Ads
 // @namespace    luxysiv
-// @version      2.6.5
+// @version      2.6.6
 // @description  Automatically skips, mutes ads on YouTube
 // @author       Mạnh Dương
 // @match        *://*.youtube.com/*
@@ -48,7 +48,7 @@
 
     // Function to check and handle ads based on the 'ad-showing' status of the video player
     function checkAndHandleAds() {
-        const player = document.querySelector('.html5-video-player');
+        const player = document.querySelector('#movie_player');
         const video = document.querySelector('video');
         const skipButton = document.querySelector(skipButtonSelectors.join(', '));
 
