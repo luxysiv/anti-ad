@@ -11,34 +11,57 @@
 
 (function() {
     'use strict';
-
-    // CSS rules to hide adblock button, overlay, and additional ad sections
-    const css = ` 
+    
+    // CSS rules to hide ads and ad-related elements
+    const css = `
         .banner-top,
         .ad-container,
-        #popup-giua-man-hinh {
-           display: none !important;
+        #popup-giua-man-hinh,
+        .jwplayer .jw-plugin-vast.jw-plugin,
+        .jwplayer .jw-plugin-vast.jw-plugin *,
+        .jwplayer .jw-plugin-vast .jw-ad-icon-container,
+        .jw-plugin-vast .jw-vast-nonlinear-close-button,
+        .jw-plugin-vast .jw-vast-nonlinear-open-button,
+        .jw-plugin-vast.jw-vast-nonlinear-active .jw-banner,
+        .jw-plugin-vast.jw-vast-nonlinear-collapsed .jw-banner,
+        .jwplayer .jw-plugin-vast .jw-ad-icon-container iframe {
+            display: none !important;
+            pointer-events: none !important;
         }
     `;
 
-    // Create a <style> element
-    const style = document.createElement('style');
-    style.textContent = css;
+    // Function to create and inject the <style> element to apply CSS rules
+    function injectCSS() {
+        const style = document.createElement('style');
+        style.textContent = css;
+        document.documentElement.appendChild(style);
+    }
 
-    // Inject the style into the HTML head to ensure persistence even when cached
-    document.documentElement.appendChild(style);    
-    
-    // Function to redirect to the video link if on linkads.xyz
-    function redirectVideoLink() {
-        if (window.location.hostname === "linkads.xyz") {
-            const urlParams = new URLSearchParams(window.location.search);
-            const videoLink = urlParams.get('link');
-            if (videoLink) {
-                window.location.href = decodeURIComponent(videoLink); // Redirect to the decoded video link
+    // Function to mute and skip video ads if an ad is detected in JWPlayer
+    function checkAndHandleAds() {
+        const jwPlayer = document.querySelector('.jwplayer');
+        if (jwPlayer) {
+            const video = jwPlayer.querySelector('video');
+            if (video) {
+                const isAdPlaying = jwPlayer.classList.contains('jw-flag-ads');
+                if (isAdPlaying) {
+                    // Mute and skip the ad
+                    video.muted = true;
+                    video.currentTime = video.duration || 9999; // Skip to the end of ad video
+                    video.remove(); // Remove ad video
+                    console.log("Skipping the ad!");
+                }
             }
         }
     }
 
-    // Call the redirect function if necessary
-    redirectVideoLink();
+    // Initialize a MutationObserver to monitor and handle ads in real-time
+    function initObserver() {
+        const observer = new MutationObserver(checkAndHandleAds);
+        observer.observe(document.documentElement, { childList: true, subtree: true });
+    }
+
+    // Run functions to block and manage ads
+    injectCSS();
+    initObserver();
 })();
