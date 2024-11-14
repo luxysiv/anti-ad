@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Phimmoichill Block Ads
 // @namespace    luxysiv
-// @version      2.5
+// @version      2.5.1
 // @description  Hide ads on phimmoichill.biz and prevent loading of raw GitHub resources
 // @author       Mạnh Dương
 // @match        *://phimmoichill.biz/*
@@ -11,8 +11,8 @@
 
 (function() {
     'use strict';
-
-    // Set cookie with key 'popupOpened' and value 'true'
+    
+    // Set a cookie with the key 'popupOpened' and value 'true' to prevent showing popup ads
     document.cookie = "popupOpened=true; path=/;";
 
     // Inject CSS to hide ad elements
@@ -31,60 +31,34 @@
     style.textContent = css;
     document.documentElement.appendChild(style);
 
-    // Function to block connections to 'raw.githubusercontent.com'
-    const blockURL = 'raw.githubusercontent.com';
-
-    // Intercept and block fetch requests
-    const originalFetch = window.fetch;
-    window.fetch = function(url, ...args) {
-        if (url.includes(blockURL)) {
-            console.log('Blocking fetch request to:', url);
-            return Promise.reject(new Error('Blocked URL')); // Block the request
+    // Function to mute the ad video and skip it by moving to the end
+    function muteAndSkipAd(video) {
+        if (video) {
+            video.muted = true; // Mute the ad video
+            video.currentTime = video.duration || 9999; // Skip to the end of the video
+            video.remove(); // Remove the video element after skipping
+            console.log("Muted and skipped the ad.");
         }
-        return originalFetch.apply(this, arguments); // Allow other requests
-    };
-
-    // Intercept and block XMLHttpRequest
-    const originalXHR = window.XMLHttpRequest.prototype.open;
-    window.XMLHttpRequest.prototype.open = function(method, url, ...args) {
-        if (url.includes(blockURL)) {
-            console.log('Blocking XMLHttpRequest to:', url);
-            throw new Error('Blocked URL'); // Block the request
-        }
-        return originalXHR.apply(this, arguments); // Allow other requests
-    };
-
-    // Function to block media elements from loading
-    function blockMediaElements() {
-        document.querySelectorAll('video, audio, img').forEach(media => {
-            if (media.src && media.src.includes(blockURL)) {
-                console.log('Blocked media:', media.src);
-                media.src = ''; // Clear the source
-                media.pause && media.pause(); // Pause media if applicable
-            }
-        });
     }
 
-    // Function to block script and link elements that may load raw.githubusercontent.com
-    function blockScriptAndLinkElements() {
-        document.querySelectorAll('script[src], link[href]').forEach(element => {
-            if ((element.src && element.src.includes(blockURL)) || 
-                (element.href && element.href.includes(blockURL))) {
-                console.log('Blocking script or link to:', element.src || element.href);
-                element.parentNode.removeChild(element); // Remove the element from the DOM
+    // Observe changes in the DOM for ads
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            // Check if the ad video element has appeared
+            const adPlayer = document.querySelector('.jw-flag-ads');
+            const video = document.querySelector('.jw-video');
+
+            if (adPlayer && video) {
+                muteAndSkipAd(video); // Mute and skip the ad
+                observer.disconnect(); // Stop observing after the ad is skipped
             }
         });
-    }
-
-    // Observe the document to block new elements
-    const observer = new MutationObserver(() => {
-        blockMediaElements();
-        blockScriptAndLinkElements();
     });
 
-    observer.observe(document.body, { childList: true, subtree: true });
+    // Start observing the root of the document for changes
+    observer.observe(document.documentElement, {
+        childList: true,
+        subtree: true
+    });
 
-    // Run blocking immediately on script load
-    blockMediaElements();
-    blockScriptAndLinkElements();
 })();
