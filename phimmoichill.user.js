@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         Phimmoichill Block Ads
 // @namespace    luxysiv
-// @version      2.5.1
+// @version      2.5.2
 // @description  Hide ads on phimmoichill.biz and prevent loading of raw GitHub resources
 // @author       Mạnh Dương
-// @match        *://phimmoichill.biz/*
+// @match        *://phimmoichilltv.net/*
 // @run-at       document-start
-// @icon         https://phimmoichill.biz/favicon.ico
+// @icon         https://phimmoichilltv.net/favicon.ico
 // ==/UserScript==
 
 (function() {
