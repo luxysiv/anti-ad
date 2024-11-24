@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VNExpress Comprehensive Ad Blocker
 // @namespace    luxysiv
-// @version      2.2.5
+// @version      2.3
 // @description  Hide all specified ads and elements on VNExpress
 // @author       Mạnh Dương
 // @match        *://*.vnexpress.net/*
@@ -39,6 +39,7 @@
         .box-news-other-site.container,
         .vne_app.app_info.width_common,
         .clearfix.box_300_targer.section,
+        .box-tvol-vs.has-border.box-category,
         .coppy_right_info.width_common.newsletter_sidebar,
         .box-tvol-vs.box_category_v2.box_category.inner_section,
         .width_common.coppy_right_info.newsletters_footer_mb,
