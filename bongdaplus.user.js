@@ -15,6 +15,7 @@
     // CSS rules to hide specific sections initially if they are likely to contain "Góc check var"
     const css = `
     .clz,
+    #ADMTOP,
     .relates,
     .tip-lst,
     .mix-tags,
