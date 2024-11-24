@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VNExpress Comprehensive Ad Blocker
 // @namespace    luxysiv
-// @version      2.2
+// @version      2.2.1
 // @description  Hide all specified ads and elements on VNExpress
 // @author       Mạnh Dương
 // @match        *://*.vnexpress.net/*
@@ -46,14 +46,9 @@
         #box-raovat-v2-home-pc.box-raovat-v2.box-category,
         #raovat.box_category_v2.box_category.section,
         #footer > div.width_common.coppy_right_info > .vne_app.app_info.width_common,
-        #wrap-main-nav > section.wrap-all-menu:last-child > div.container > div.content-right:last-child > div.width_common.scroll-menu-expand.scrollbar-inner.ss-container > div.ss-wrapper:first-child > div.ss-content > ul.list-link:nth-child(3) > li.link:first-child,
-        #wrap-main-nav > section.wrap-all-menu:last-child > div.container > div.content-right:last-child > div.width_common.scroll-menu-expand.scrollbar-inner.ss-container > div.ss-wrapper:first-child > div.ss-content > ul.list-link:nth-child(3) > li.link:last-child,
-        #wrap-main-nav > section.wrap-all-menu:last-child > div.container > div.content-right:last-child > div.width_common.scroll-menu-expand.scrollbar-inner.ss-container > div.ss-wrapper:first-child > div.ss-content > ul.list-link:nth-child(3),
-        #js_slider_company > div.swiper-wrapper:first-child,
-        section.section.section_container:nth-child(23) > div.container.wrap-box-business.fs_parent_box:nth-child(3) > div.width_common.inner-box-business > div.box-category.box-info-company.box-last.animated.animatedFadeInUp.fadeInUp:first-child > hgroup.width_common.title-box-category.title-box-small:first-child,
-        section.section.section_container:nth-child(23) > div.container.wrap-box-business.fs_parent_box:nth-child(3) > div.width_common.inner-box-business > div.box-category.box-info-company.box-last.animated.animatedFadeInUp.fadeInUp:first-child,
-        section.section.section_container:nth-child(23) > div.container.wrap-box-business.fs_parent_box:nth-child(3) > div.width_common.inner-box-business,
-        section.section.section_container:nth-child(23) > div.container.wrap-box-business.fs_parent_box:nth-child(3) > div.width_common.inner-box-business {
+        #wrap-main-nav > section.wrap-all-menu:last-child,
+        #js_slider_company,
+        section.section.section_container:nth-child(23) {
             display: none !important;
         }
     `;
