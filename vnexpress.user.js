@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VNExpress Comprehensive Ad Blocker
 // @namespace    luxysiv
-// @version      2.2.4
+// @version      2.2.5
 // @description  Hide all specified ads and elements on VNExpress
 // @author       Mạnh Dương
 // @match        *://*.vnexpress.net/*
@@ -19,6 +19,7 @@
         .mb20,
         .wrap,
         .gopy-vne,
+        .list-link,
         .banner-ads,
         .article_ads,
         .button-adblock,
@@ -46,9 +47,7 @@
         #box-raovat-v2-home-pc.box-raovat-v2.box-category,
         #raovat.box_category_v2.box_category.section,
         #footer > div.width_common.coppy_right_info > .vne_app.app_info.width_common,
-        #wrap-main-nav > section.wrap-all-menu:last-child > div.container > div.content-right:last-child > div.width_common.scroll-menu-expand.scrollbar-inner.ss-container > div.ss-wrapper:first-child > div.ss-content > ul.list-link:nth-child(3),
-        #js_slider_company > div.swiper-wrapper:first-child,
-        section.section.section_container:nth-child(23) > div.container.wrap-box-business.fs_parent_box:nth-child(3) > div.width_common.inner-box-business {
+       .fs_parent_box.wrap-box-business.container {
             display: none !important;
         }
     `;
