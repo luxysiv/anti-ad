@@ -47,6 +47,7 @@
         ul.list-menu-footer:nth-of-type(5),
         div.width_common.menu_grid2:nth-of-type(25),
         #banner_top,
+        #sync_bgu_and_masthead,
         #box-raovat-v2-home-pc.box-raovat-v2.box-category,
         #raovat.box_category_v2.box_category.section,
         #footer > div.width_common.coppy_right_info > .vne_app.app_info.width_common,
