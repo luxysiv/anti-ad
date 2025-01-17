@@ -4,9 +4,9 @@
 // @version      2.6
 // @description  Block ads on phimmoichill
 // @author       Mạnh Dương
-// @match        *://phimmoichill.bio/*
+// @match        *://phimmoichill.lat/*
 // @run-at       document-start
-// @icon         https://phimmoichill.bio/favicon.ico
+// @icon         https://phimmoichill.lat/favicon.ico
 // ==/UserScript==
 
 (function () {
