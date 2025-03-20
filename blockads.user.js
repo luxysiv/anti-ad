@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hide ads 
 // @namespace    Mạnh Dương
-// @version      1.3
+// @version      1.3.1
 // @description  Inject cosmetic script into website 
 // @author       luxysiv
 // @match        *://*/*
@@ -10,6 +10,7 @@
 // @grant        GM.getValue
 // @grant        GM.setValue
 // @grant        GM.registerMenuCommand
+// @grant        GM.addValueChangeListener
 // ==/UserScript==
 
 (async function () {
@@ -34,20 +35,11 @@
         }
     ];
 
-    // Lấy hostname hiện tại (không gồm "www.")
-    const currentHost = window.location.hostname.replace(/^www\./, "");
-
-    // Tìm xem hostname có khớp regex nào không
-    const matchedScript = siteScripts.find(site => site.pattern.test(currentHost));
-    if (!matchedScript) return; // Không khớp, thoát luôn
-
-    console.log(`[Multi-Site Injector] Trang hợp lệ: ${currentHost}`);
-
     // Hàm tải script & cache lại
     async function loadScriptContent(scriptInfo) {
         let cached = await GM.getValue(scriptInfo.cacheKey, null);
         if (cached) {
-            console.log(`[Multi-Site Injector] Sử dụng cache cho ${currentHost}`);
+            console.log(`[Multi-Site Injector] Sử dụng cache cho ${scriptInfo.url}`);
             return cached;
         } else {
             console.log(`[Multi-Site Injector] Đang tải script từ ${scriptInfo.url}`);
@@ -71,6 +63,36 @@
             });
         }
     }
+
+    // Tải và cache tất cả các script khi cài đặt
+    async function preloadScripts() {
+        for (const site of siteScripts) {
+            try {
+                await loadScriptContent(site);
+                console.log(`[Multi-Site Injector] Đã tải và cache script cho ${site.url}`);
+            } catch (error) {
+                console.error(`[Multi-Site Injector] Lỗi khi tải script cho ${site.url}:`, error);
+            }
+        }
+    }
+
+    // Kiểm tra nếu script vừa được cài đặt
+    if (typeof GM_addValueChangeListener === 'function') {
+        GM.addValueChangeListener('install', async function (name, oldValue, newValue, remote) {
+            if (newValue === 'installed') {
+                await preloadScripts();
+            }
+        });
+    }
+
+    // Lấy hostname hiện tại (không gồm "www.")
+    const currentHost = window.location.hostname.replace(/^www\./, "");
+
+    // Tìm xem hostname có khớp regex nào không
+    const matchedScript = siteScripts.find(site => site.pattern.test(currentHost));
+    if (!matchedScript) return; // Không khớp, thoát luôn
+
+    console.log(`[Multi-Site Injector] Trang hợp lệ: ${currentHost}`);
 
     // Tải nội dung script & inject vào trang
     try {
