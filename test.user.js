@@ -4,7 +4,7 @@
 // @version      1.0
 // @description  Tải và lưu script bên ngoài để tiêm vào các trang web khác nhau, mỗi trang sử dụng script riêng biệt.
 // @author       Bạn
-// @match        *://*.*/*
+// @match        *://*/*
 // @run-at       document-start
 // @grant        GM.xmlHttpRequest
 // @grant        GM.getValue
