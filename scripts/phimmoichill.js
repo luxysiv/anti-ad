@@ -2,12 +2,17 @@
     'use strict';
     
     // Set a cookie with the key 'popupOpened' and value 'true' to prevent showing popup ads
-    document.cookie = "popupOpened=true; path=/;";
-
+    document.cookie = "popupOpened=true; path=/; expires=Fri, 31 Dec 9999 23:59:59 GMT;";
+    
     // Inject CSS to hide ad elements
     const css = `
         .off-ads,
-        #an_catfish {
+        .banner-ads,
+        .hidemobile,
+        #mobiads,
+        #an_catfish,
+        #headermbads,
+        #botplayeradsmb {
             display: none !important;
         }
     `;
