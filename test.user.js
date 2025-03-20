@@ -25,7 +25,7 @@
             url: "https://raw.githubusercontent.com/luxysiv/Adblock-Extension/main/scripts/bongdaplus.js",
             cacheKey: "script_bongdaplus"
         },
-        "phimmoichill": {
+        "phimmoichill.love": {
             url: "https://raw.githubusercontent.com/luxysiv/Adblock-Extension/main/scripts/phimmoichill.js",
             cacheKey: "script_phimmoichill" // Dùng chung script với vnexpress
         },
