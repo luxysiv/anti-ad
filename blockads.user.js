@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Multi-Site Local Script Injector (Regex Matching + Subdomain Support)
-// @namespace    your_namespace
+// @name         Hide ads 
+// @namespace    Mạnh Dương
 // @version      1.3
-// @description  Inject script vào nhiều trang, hỗ trợ regex và subdomain matching.
-// @author       Bạn
+// @description  Inject cosmetic script into website 
+// @author       luxysiv
 // @match        *://*/*
 // @run-at       document-start
 // @grant        GM.xmlHttpRequest
