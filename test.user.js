@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Multi-Site Local Script Injector
+// @name         Multi-Site Local Script Injector (Optimized)
 // @namespace    your_namespace
-// @version      1.0
-// @description  Tải và lưu script bên ngoài để tiêm vào các trang web khác nhau, mỗi trang sử dụng script riêng biệt.
+// @version      1.1
+// @description  Tải & lưu script bên ngoài để tiêm vào các trang web khác nhau (hỗ trợ script chung)
 // @author       Bạn
 // @match        *://*/*
 // @run-at       document-start
@@ -15,40 +15,42 @@
 (async function () {
     'use strict';
 
-    // Cấu hình cho các trang: key là chuỗi nhận dạng (phần trong URL), value chứa URL script bên ngoài và cacheKey tương ứng
+    // Cấu hình danh sách trang web và script tương ứng
     const siteScripts = {
         "vnexpress.net": {
-            url: "https://raw.githubusercontent.com/luxysiv/Adblock-Extension/refs/heads/main/scripts/vnexpress.js", // Thay bằng URL script của site1
-            cacheKey: "script_site1"
+            url: "https://raw.githubusercontent.com/luxysiv/Adblock-Extension/main/scripts/vnexpress.js",
+            cacheKey: "script_vnexpress"
         },
         "bongdaplus.vn": {
-            url: "https://raw.githubusercontent.com/luxysiv/Adblock-Extension/refs/heads/main/scripts/bongdaplus.js", // Thay bằng URL script của site2
-            cacheKey: "script_site2"
+            url: "https://raw.githubusercontent.com/luxysiv/Adblock-Extension/main/scripts/bongdaplus.js",
+            cacheKey: "script_bongdaplus"
         },
         "phimmoichill": {
-            url: "https://raw.githubusercontent.com/luxysiv/Adblock-Extension/refs/heads/main/scripts/vnexpress.js", // Thay bằng URL script của site3
-            cacheKey: "script_site3"
+            url: "https://raw.githubusercontent.com/luxysiv/Adblock-Extension/main/scripts/phimmoichill.js",
+            cacheKey: "script_phimmoichill" // Dùng chung script với vnexpress
+        },
+        "example.com": {
+            url: "https://raw.githubusercontent.com/luxysiv/Adblock-Extension/main/scripts/example.js",
+            cacheKey: "script_example"
         }
     };
 
-    // Xác định trang hiện tại dựa trên window.location.href
-    let currentSite = null;
-    for (const site in siteScripts) {
-        if (window.location.href.includes(site)) {
-            currentSite = site;
-            break;
-        }
-    }
-    if (!currentSite) return; // Nếu trang không nằm trong danh sách, dừng chạy.
+    // Lấy hostname hiện tại (không gồm subdomain)
+    const currentHost = window.location.hostname.replace(/^www\./, ""); // Loại bỏ "www."
 
-    console.log(`[Multi-Site Injector] Đang xử lý trang: ${currentSite}`);
+    // Kiểm tra trang hiện tại có trong danh sách không
+    if (!(currentHost in siteScripts)) return;
 
-    // Hàm tải script bên ngoài với hỗ trợ cache (lưu local)
+    console.log(`[Multi-Site Injector] Trang hợp lệ: ${currentHost}`);
+
+    // Lấy thông tin script của trang hiện tại
+    const scriptInfo = siteScripts[currentHost];
+
+    // Hàm tải script & lưu vào cache
     async function loadScriptContent(scriptInfo) {
-        // Kiểm tra cache
         let cached = await GM.getValue(scriptInfo.cacheKey, null);
         if (cached) {
-            console.log(`[Multi-Site Injector] Sử dụng cache cho ${currentSite}`);
+            console.log(`[Multi-Site Injector] Sử dụng cache cho ${currentHost}`);
             return cached;
         } else {
             console.log(`[Multi-Site Injector] Đang tải script từ ${scriptInfo.url}`);
@@ -62,34 +64,34 @@
                             await GM.setValue(scriptInfo.cacheKey, scriptContent);
                             resolve(scriptContent);
                         } else {
-                            reject(new Error("Không tải được script: " + scriptInfo.url));
+                            reject(new Error(`Không tải được script: ${scriptInfo.url}`));
                         }
                     },
                     onerror: function () {
-                        reject(new Error("Lỗi khi tải script: " + scriptInfo.url));
+                        reject(new Error(`Lỗi khi tải script: ${scriptInfo.url}`));
                     }
                 });
             });
         }
     }
 
-    // Tải nội dung script cho trang hiện tại
+    // Tải nội dung script & inject vào trang
     try {
-        const scriptContent = await loadScriptContent(siteScripts[currentSite]);
-        // Tạo thẻ script để tiêm nội dung script vào trang
+        const scriptContent = await loadScriptContent(scriptInfo);
         const scriptElem = document.createElement("script");
         scriptElem.textContent = scriptContent;
         document.documentElement.appendChild(scriptElem);
-        console.log(`[Multi-Site Injector] Đã tiêm script cho ${currentSite}`);
+        console.log(`[Multi-Site Injector] Đã tiêm script cho ${currentHost}`);
     } catch (error) {
         console.error("[Multi-Site Injector] Lỗi khi tiêm script:", error);
     }
 
-    // Menu command cho phép xóa cache (cập nhật script mới nếu cần)
+    // Menu command để xóa cache & tải lại script
     GM.registerMenuCommand("Clear Script Cache", async () => {
         for (const site in siteScripts) {
             await GM.setValue(siteScripts[site].cacheKey, null);
         }
         alert("Đã xóa cache của các script.");
     });
+
 })();
