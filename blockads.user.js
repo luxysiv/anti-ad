@@ -21,18 +21,23 @@
     const siteScripts = [
         {
             pattern: /\.?vnexpress\.net$/, // Match vnexpress.net & mọi subdomain (video.vnexpress.net, m.vnexpress.net, ...)
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/vnexpress.user.js",
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/vnexpress.js",
             cacheKey: "script_vnexpress"
         },
         {
             pattern: /\.?bongdaplus\.vn$/, // Match bongdaplus.vn & mọi subdomain
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/bongdaplus.user.js",
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/bongdaplus.js",
             cacheKey: "script_bongdaplus"
         },
         {
             pattern: /phimmoichill/, // Match mọi domain chứa "phimmoichill"
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/phimmoichill.user.js",
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/phimmoichill.js",
             cacheKey: "script_phimmoichill"
+        },
+        {
+            pattern: /truyensex/, // Match mọi domain chứa "phimmoichill"
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/truyensex.js",
+            cacheKey: "script_truyensex"
         }
     ];
 
