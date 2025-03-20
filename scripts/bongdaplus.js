@@ -1,14 +1,3 @@
-// ==UserScript==
-// @name         BongdaPlus Ad Blocker
-// @namespace    luxysiv
-// @version      2.1
-// @description  Hide specified ad elements on bongdaplus.vn for a cleaner experience.
-// @author       Mạnh Dương
-// @match        *://bongdaplus.vn/*
-// @run-at       document-start
-// @icon         https://bongdaplus.vn/favicon.ico
-// ==/UserScript==
-
 (function() {
     'use strict';
 
