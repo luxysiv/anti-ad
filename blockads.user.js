@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Hide ads 
-// @namespace    Mạnh Dương
-// @version      1.3.1
+// @namespace    luxysiv
+// @version      1.3.2
 // @description  Inject cosmetic script into website 
-// @author       luxysiv
+// @author       Mạnh Dương
 // @match        *://*/*
 // @run-at       document-start
 // @grant        GM.xmlHttpRequest
@@ -11,6 +11,7 @@
 // @grant        GM.setValue
 // @grant        GM.registerMenuCommand
 // @grant        GM.addValueChangeListener
+// @icon         https://github.com/luxysiv/anti-ads/raw/refs/heads/main/icon.png
 // ==/UserScript==
 
 (async function () {
