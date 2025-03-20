@@ -19,17 +19,17 @@
     const siteScripts = [
         {
             pattern: /\.?vnexpress\.net$/, // Match vnexpress.net & mọi subdomain (video.vnexpress.net, m.vnexpress.net, ...)
-            url: "https://raw.githubusercontent.com/luxysiv/Adblock-Extension/main/scripts/vnexpress.js",
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/vnexpress.user.js",
             cacheKey: "script_vnexpress"
         },
         {
             pattern: /\.?bongdaplus\.vn$/, // Match bongdaplus.vn & mọi subdomain
-            url: "https://raw.githubusercontent.com/luxysiv/Adblock-Extension/main/scripts/bongdaplus.js",
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/bongdaplus.user.js",
             cacheKey: "script_bongdaplus"
         },
         {
             pattern: /phimmoichill/, // Match mọi domain chứa "phimmoichill"
-            url: "https://raw.githubusercontent.com/luxysiv/Adblock-Extension/main/scripts/phimmoichill.js",
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/phimmoichill.user.js",
             cacheKey: "script_phimmoichill"
         }
     ];
