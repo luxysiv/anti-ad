@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Multi-Site Local Script Injector (Optimized)
+// @name         Multi-Site Local Script Injector (Regex Matching + Subdomain Support)
 // @namespace    your_namespace
-// @version      1.1
-// @description  Tải & lưu script bên ngoài để tiêm vào các trang web khác nhau (hỗ trợ script chung)
+// @version      1.3
+// @description  Inject script vào nhiều trang, hỗ trợ regex và subdomain matching.
 // @author       Bạn
 // @match        *://*/*
 // @run-at       document-start
@@ -15,38 +15,35 @@
 (async function () {
     'use strict';
 
-    // Cấu hình danh sách trang web và script tương ứng
-    const siteScripts = {
-        "vnexpress.net": {
+    // Danh sách trang web và script tương ứng (hỗ trợ regex + subdomain)
+    const siteScripts = [
+        {
+            pattern: /\.?vnexpress\.net$/, // Match vnexpress.net & mọi subdomain (video.vnexpress.net, m.vnexpress.net, ...)
             url: "https://raw.githubusercontent.com/luxysiv/Adblock-Extension/main/scripts/vnexpress.js",
             cacheKey: "script_vnexpress"
         },
-        "bongdaplus.vn": {
+        {
+            pattern: /\.?bongdaplus\.vn$/, // Match bongdaplus.vn & mọi subdomain
             url: "https://raw.githubusercontent.com/luxysiv/Adblock-Extension/main/scripts/bongdaplus.js",
             cacheKey: "script_bongdaplus"
         },
-        "phimmoichill.love": {
+        {
+            pattern: /phimmoichill/, // Match mọi domain chứa "phimmoichill"
             url: "https://raw.githubusercontent.com/luxysiv/Adblock-Extension/main/scripts/phimmoichill.js",
-            cacheKey: "script_phimmoichill" // Dùng chung script với vnexpress
-        },
-        "example.com": {
-            url: "https://raw.githubusercontent.com/luxysiv/Adblock-Extension/main/scripts/example.js",
-            cacheKey: "script_example"
+            cacheKey: "script_phimmoichill"
         }
-    };
+    ];
 
-    // Lấy hostname hiện tại (không gồm subdomain)
-    const currentHost = window.location.hostname.replace(/^www\./, ""); // Loại bỏ "www."
+    // Lấy hostname hiện tại (không gồm "www.")
+    const currentHost = window.location.hostname.replace(/^www\./, "");
 
-    // Kiểm tra trang hiện tại có trong danh sách không
-    if (!(currentHost in siteScripts)) return;
+    // Tìm xem hostname có khớp regex nào không
+    const matchedScript = siteScripts.find(site => site.pattern.test(currentHost));
+    if (!matchedScript) return; // Không khớp, thoát luôn
 
     console.log(`[Multi-Site Injector] Trang hợp lệ: ${currentHost}`);
 
-    // Lấy thông tin script của trang hiện tại
-    const scriptInfo = siteScripts[currentHost];
-
-    // Hàm tải script & lưu vào cache
+    // Hàm tải script & cache lại
     async function loadScriptContent(scriptInfo) {
         let cached = await GM.getValue(scriptInfo.cacheKey, null);
         if (cached) {
@@ -77,7 +74,7 @@
 
     // Tải nội dung script & inject vào trang
     try {
-        const scriptContent = await loadScriptContent(scriptInfo);
+        const scriptContent = await loadScriptContent(matchedScript);
         const scriptElem = document.createElement("script");
         scriptElem.textContent = scriptContent;
         document.documentElement.appendChild(scriptElem);
@@ -86,10 +83,10 @@
         console.error("[Multi-Site Injector] Lỗi khi tiêm script:", error);
     }
 
-    // Menu command để xóa cache & tải lại script
+    // Menu command để xóa cache
     GM.registerMenuCommand("Clear Script Cache", async () => {
-        for (const site in siteScripts) {
-            await GM.setValue(siteScripts[site].cacheKey, null);
+        for (const site of siteScripts) {
+            await GM.setValue(site.cacheKey, null);
         }
         alert("Đã xóa cache của các script.");
     });
