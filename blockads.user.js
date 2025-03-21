@@ -35,9 +35,139 @@
             cacheKey: "script_phimmoichill"
         },
         {
-            pattern: /truyensex/, // Match mọi domain chứa "phimmoichill"
+            pattern: /truyensex/, // Match mọi domain chứa "truyensex"
             url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/truyensex.js",
             cacheKey: "script_truyensex"
+        },
+        {
+            pattern: /youtube\.com$/, // Match youtube.com
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/youtube.js",
+            cacheKey: "script_youtube"
+        },
+        {
+            pattern: /phimnhanh/, // Match mọi domain chứa "phimnhanh"
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/phimnhanh.js",
+            cacheKey: "script_phimnhanh"
+        },
+        {
+            pattern: /\.?24h\.com\.vn$/, // Match 24h.com.vn & mọi subdomain
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/24h.js",
+            cacheKey: "script_24h"
+        },
+        {
+            pattern: /\.?tuoitre\.vn$/, // Match tuoitre.vn & mọi subdomain
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/tuoitre.js",
+            cacheKey: "script_tuoitre"
+        },
+        {
+            pattern: /animevietsub/, // Match mọi domain chứa "animevietsub"
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/animevietsub.js",
+            cacheKey: "script_animevietsub"
+        },
+        {
+            pattern: /tvphim/, // Match mọi domain chứa "tvphim"
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/tvphim.js",
+            cacheKey: "script_tvphim"
+        },
+        {
+            pattern: /anime/, // Match mọi domain chứa "anime"
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/anime.js",
+            cacheKey: "script_anime"
+        },
+        {
+            pattern: /\.?bbc\.com$/, // Match bbc.com & mọi subdomain
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/bbc.js",
+            cacheKey: "script_bbc"
+        },
+        {
+            pattern: /nettruyenvie/, // Match mọi domain chứa "nettruyenvie"
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/nettruyenvie.js",
+            cacheKey: "script_nettruyenvie"
+        },
+        {
+            pattern: /truyenfull/, // Match mọi domain chứa "truyenfull"
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/truyenfull.js",
+            cacheKey: "script_truyenfull"
+        },
+        {
+            pattern: /\.?douyin\.com$/, // Match douyin.com & mọi subdomain
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/douyin.js",
+            cacheKey: "script_douyin"
+        },
+        {
+            pattern: /\.?fptshop\.com\.vn$/, // Match fptshop.com.vn & mọi subdomain
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/fptshop.js",
+            cacheKey: "script_fptshop"
+        },
+        {
+            pattern: /hhpanda/, // Match mọi domain chứa "hhpanda"
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/hhpanda.js",
+            cacheKey: "script_hhpanda"
+        },
+        {
+            pattern: /nangcuc/, // Match mọi domain chứa "nangcuc"
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/nangcuc.js",
+            cacheKey: "script_nangcuc"
+        },
+        {
+            pattern: /hhchina/, // Match mọi domain chứa "hhchina"
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/hhchina.js",
+            cacheKey: "script_hhchina"
+        },
+        {
+            pattern: /tv3dhay/, // Match mọi domain chứa "tv3dhay"
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/tv3dhay.js",
+            cacheKey: "script_tv3dhay"
+        },
+        {
+            pattern: /phimnhua/, // Match mọi domain chứa "phimnhua"
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/phimnhua.js",
+            cacheKey: "script_phimnhua"
+        },
+        {
+            pattern: /apkpure/, // Match mọi domain chứa "apkpure"
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/apkpure.js",
+            cacheKey: "script_apkpure"
+        },
+        {
+            pattern: /vietsubtv/, // Match mọi domain chứa "vietsubtv"
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/vietsubtv.js",
+            cacheKey: "script_vietsubtv"
+        },
+        {
+            pattern: /\.?apkmirror\.com$/, // Match apkmirror.com & mọi subdomain
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/apkmirror.js",
+            cacheKey: "script_apkmirror"
+        },
+        {
+            pattern: /\.?uptodown\.com$/, // Match uptodown.com & mọi subdomain
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/uptodown.js",
+            cacheKey: "script_uptodown"
+        },
+        {
+            pattern: /motchill/, // Match mọi domain chứa "motchill"
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/motchill.js",
+            cacheKey: "script_motchill"
+        },
+        {
+            pattern: /\.?soha\.vn$/, // Match soha.vn & mọi subdomain
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/soha.js",
+            cacheKey: "script_soha"
+        },
+        {
+            pattern: /hoathinh3d|hh3d|hhtq|hhninja|phimhoathinh3d/, // Match các domain liên quan đến hoathinh3d
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/hh3d.js",
+            cacheKey: "script_hh3d"
+        },
+        {
+            pattern: /xembongdalau|thapcam|vebo|90phut|xoilac|banhkhuc/, // Match các domain liên quan đến xembongdalau
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/xembongdalau.js",
+            cacheKey: "script_xembongdalau"
+        },
+        {
+            pattern: /phimmoi|phimmoi\.|phimmoiday|daophimtrung/, // Match các domain liên quan đến phimmoi
+            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/phimmoi.js",
+            cacheKey: "script_phimmoi"
         }
     ];
 
