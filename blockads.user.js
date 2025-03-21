@@ -18,7 +18,7 @@
     'use strict';
 
     // URL đến file JSON chứa danh sách các script
-    const SITE_SCRIPTS_URL = "https://raw.githubusercontent.com/luxysiv/anti-ads/main/site-scripts.json"; // Thay bằng URL thực tế của bạn
+    const SITE_SCRIPTS_URL = "https://raw.githubusercontent.com/luxysiv/anti-ads/refs/heads/main/site-scripts.json"; // Thay bằng URL thực tế của bạn
 
     // Hàm tải file JSON chứa danh sách các script
     async function loadSiteScripts() {
