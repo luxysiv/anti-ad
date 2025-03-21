@@ -17,159 +17,49 @@
 (async function () {
     'use strict';
 
-    // Danh sách trang web và script tương ứng (hỗ trợ regex + subdomain)
-    const siteScripts = [
-        {
-            pattern: /\.?vnexpress\.net$/, // Match vnexpress.net & mọi subdomain (video.vnexpress.net, m.vnexpress.net, ...)
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/vnexpress.js",
-            cacheKey: "script_vnexpress"
-        },
-        {
-            pattern: /\.?bongdaplus\.vn$/, // Match bongdaplus.vn & mọi subdomain
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/bongdaplus.js",
-            cacheKey: "script_bongdaplus"
-        },
-        {
-            pattern: /phimmoichill/, // Match mọi domain chứa "phimmoichill"
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/phimmoichill.js",
-            cacheKey: "script_phimmoichill"
-        },
-        {
-            pattern: /truyensex/, // Match mọi domain chứa "truyensex"
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/truyensex.js",
-            cacheKey: "script_truyensex"
-        },
-        {
-            pattern: /\.?youtube\.com$/, // Match youtube.com
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/youtube.js",
-            cacheKey: "script_youtube"
-        },
-        {
-            pattern: /phimnhanh/, // Match mọi domain chứa "phimnhanh"
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/phimnhanh.js",
-            cacheKey: "script_phimnhanh"
-        },
-        {
-            pattern: /\.?24h\.com\.vn$/, // Match 24h.com.vn & mọi subdomain
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/24h.js",
-            cacheKey: "script_24h"
-        },
-        {
-            pattern: /\.?tuoitre\.vn$/, // Match tuoitre.vn & mọi subdomain
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/tuoitre.js",
-            cacheKey: "script_tuoitre"
-        },
-        {
-            pattern: /animevietsub/, // Match mọi domain chứa "animevietsub"
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/animevietsub.js",
-            cacheKey: "script_animevietsub"
-        },
-        {
-            pattern: /tvphim/, // Match mọi domain chứa "tvphim"
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/tvphim.js",
-            cacheKey: "script_tvphim"
-        },
-        {
-            pattern: /anime/, // Match mọi domain chứa "anime"
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/anime.js",
-            cacheKey: "script_anime"
-        },
-        {
-            pattern: /\.?bbc\.com$/, // Match bbc.com & mọi subdomain
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/bbc.js",
-            cacheKey: "script_bbc"
-        },
-        {
-            pattern: /nettruyenvie/, // Match mọi domain chứa "nettruyenvie"
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/nettruyenvie.js",
-            cacheKey: "script_nettruyenvie"
-        },
-        {
-            pattern: /truyenfull/, // Match mọi domain chứa "truyenfull"
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/truyenfull.js",
-            cacheKey: "script_truyenfull"
-        },
-        {
-            pattern: /\.?douyin\.com$/, // Match douyin.com & mọi subdomain
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/douyin.js",
-            cacheKey: "script_douyin"
-        },
-        {
-            pattern: /\.?fptshop\.com\.vn$/, // Match fptshop.com.vn & mọi subdomain
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/fptshop.js",
-            cacheKey: "script_fptshop"
-        },
-        {
-            pattern: /hhpanda/, // Match mọi domain chứa "hhpanda"
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/hhpanda.js",
-            cacheKey: "script_hhpanda"
-        },
-        {
-            pattern: /nangcuc/, // Match mọi domain chứa "nangcuc"
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/nangcuc.js",
-            cacheKey: "script_nangcuc"
-        },
-        {
-            pattern: /hhchina/, // Match mọi domain chứa "hhchina"
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/hhchina.js",
-            cacheKey: "script_hhchina"
-        },
-        {
-            pattern: /tv3dhay/, // Match mọi domain chứa "tv3dhay"
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/tv3dhay.js",
-            cacheKey: "script_tv3dhay"
-        },
-        {
-            pattern: /phimnhua/, // Match mọi domain chứa "phimnhua"
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/phimnhua.js",
-            cacheKey: "script_phimnhua"
-        },
-        {
-            pattern: /apkpure/, // Match mọi domain chứa "apkpure"
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/apkpure.js",
-            cacheKey: "script_apkpure"
-        },
-        {
-            pattern: /vietsubtv/, // Match mọi domain chứa "vietsubtv"
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/vietsubtv.js",
-            cacheKey: "script_vietsubtv"
-        },
-        {
-            pattern: /\.?apkmirror\.com$/, // Match apkmirror.com & mọi subdomain
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/apkmirror.js",
-            cacheKey: "script_apkmirror"
-        },
-        {
-            pattern: /\.?uptodown\.com$/, // Match uptodown.com & mọi subdomain
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/uptodown.js",
-            cacheKey: "script_uptodown"
-        },
-        {
-            pattern: /motchill/, // Match mọi domain chứa "motchill"
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/motchill.js",
-            cacheKey: "script_motchill"
-        },
-        {
-            pattern: /\.?soha\.vn$/, // Match soha.vn & mọi subdomain
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/soha.js",
-            cacheKey: "script_soha"
-        },
-        {
-            pattern: /hoathinh3d|hh3d|hhtq|hhninja|phimhoathinh3d/, // Match các domain liên quan đến hoathinh3d
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/hh3d.js",
-            cacheKey: "script_hh3d"
-        },
-        {
-            pattern: /xembongdalau|thapcam|vebo|90phut|xoilac|banhkhuc/, // Match các domain liên quan đến xembongdalau
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/xembongdalau.js",
-            cacheKey: "script_xembongdalau"
-        },
-        {
-            pattern: /phimmoi|phimmoi\.|phimmoiday|daophimtrung/, // Match các domain liên quan đến phimmoi
-            url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/phimmoi.js",
-            cacheKey: "script_phimmoi"
+    // URL đến file JSON chứa danh sách các script
+    const SITE_SCRIPTS_URL = "https://raw.githubusercontent.com/luxysiv/anti-ads/main/site-scripts.json"; // Thay bằng URL thực tế của bạn
+    const SITE_SCRIPTS_CACHE_KEY = "cached_site_scripts"; // Key để cache file JSON
+
+    // Hàm tải file JSON chứa danh sách các script
+    async function loadSiteScripts() {
+        // Kiểm tra cache trước
+        const cachedScripts = await GM.getValue(SITE_SCRIPTS_CACHE_KEY, null);
+        if (cachedScripts) {
+            console.log("[Multi-Site Injector] Sử dụng cache cho site-scripts.json");
+            return cachedScripts;
         }
-    ];
+
+        // Nếu không có cache, tải file JSON từ server
+        console.log("[Multi-Site Injector] Đang tải site-scripts.json từ server...");
+        return new Promise((resolve, reject) => {
+            GM.xmlHttpRequest({
+                method: "GET",
+                url: SITE_SCRIPTS_URL,
+                onload: function (response) {
+                    if (response.status === 200) {
+                        try {
+                            const data = JSON.parse(response.responseText);
+                            // Cache lại dữ liệu
+                            GM.setValue(SITE_SCRIPTS_CACHE_KEY, data);
+                            console.log("[Multi-Site Injector] Đã tải và cache site-scripts.json");
+                            resolve(data);
+                        } catch (error) {
+                            console.error("[Multi-Site Injector] Lỗi khi phân tích JSON:", error);
+                            reject(new Error("Lỗi khi phân tích JSON: " + error.message));
+                        }
+                    } else {
+                        console.error("[Multi-Site Injector] Lỗi khi tải file JSON:", response.status);
+                        reject(new Error("Không tải được file JSON: " + response.status));
+                    }
+                },
+                onerror: function () {
+                    console.error("[Multi-Site Injector] Lỗi khi tải file JSON");
+                    reject(new Error("Lỗi khi tải file JSON"));
+                }
+            });
+        });
+    }
 
     // Hàm tải script & cache lại
     async function loadScriptContent(scriptInfo) {
@@ -201,7 +91,7 @@
     }
 
     // Tải và cache tất cả các script khi cài đặt
-    async function preloadScripts() {
+    async function preloadScripts(siteScripts) {
         for (const site of siteScripts) {
             try {
                 await loadScriptContent(site);
@@ -216,17 +106,38 @@
     if (typeof GM_addValueChangeListener === 'function') {
         GM.addValueChangeListener('install', async function (name, oldValue, newValue, remote) {
             if (newValue === 'installed') {
-                await preloadScripts();
+                const siteScripts = await loadSiteScripts();
+                await preloadScripts(siteScripts);
             }
         });
     }
 
     // Lấy hostname hiện tại (không gồm "www.")
     const currentHost = window.location.hostname.replace(/^www\./, "");
+    console.log("[Multi-Site Injector] Hostname hiện tại:", currentHost);
+
+    // Tải danh sách các script từ file JSON
+    let siteScripts;
+    try {
+        siteScripts = await loadSiteScripts();
+        console.log("[Multi-Site Injector] Danh sách script đã tải:", siteScripts);
+    } catch (error) {
+        console.error("[Multi-Site Injector] Lỗi khi tải danh sách script:", error);
+        return;
+    }
 
     // Tìm xem hostname có khớp regex nào không
-    const matchedScript = siteScripts.find(site => site.pattern.test(currentHost));
-    if (!matchedScript) return; // Không khớp, thoát luôn
+    const matchedScript = siteScripts.find(site => {
+        const regex = new RegExp(site.pattern);
+        const isMatch = regex.test(currentHost);
+        console.log(`[Multi-Site Injector] Kiểm tra pattern "${site.pattern}" với hostname "${currentHost}":`, isMatch);
+        return isMatch;
+    });
+
+    if (!matchedScript) {
+        console.log("[Multi-Site Injector] Không tìm thấy script phù hợp cho hostname hiện tại.");
+        return; // Không khớp, thoát luôn
+    }
 
     console.log(`[Multi-Site Injector] Trang hợp lệ: ${currentHost}`);
 
@@ -243,10 +154,14 @@
 
     // Menu command để xóa cache
     GM.registerMenuCommand("Clear Script Cache", async () => {
+        // Xóa cache của site-scripts.json
+        await GM.setValue(SITE_SCRIPTS_CACHE_KEY, null);
+        // Xóa cache của các script
+        const siteScripts = await loadSiteScripts();
         for (const site of siteScripts) {
             await GM.setValue(site.cacheKey, null);
         }
-        alert("Đã xóa cache của các script.");
+        alert("Đã xóa cache của các script và site-scripts.json.");
     });
 
 })();
