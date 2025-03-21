@@ -40,7 +40,7 @@
             cacheKey: "script_truyensex"
         },
         {
-            pattern: /youtube\.com$/, // Match youtube.com
+            pattern: /\.?youtube\.com$/, // Match youtube.com
             url: "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/youtube.js",
             cacheKey: "script_youtube"
         },
