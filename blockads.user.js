@@ -18,7 +18,7 @@
     'use strict';
 
     // URL đến file JSON chứa danh sách các script
-    const SITE_SCRIPTS_URL = "https://raw.githubusercontent.com/luxysiv/anti-ads/refs/heads/main/site-scripts.json"; // Thay bằng URL thực tế của bạn
+    const SITE_SCRIPTS_URL = "https://raw.githubusercontent.com/luxysiv/anti-ads/main/site-scripts.json"; // Thay bằng URL thực tế của bạn
 
     // Hàm tải file JSON chứa danh sách các script
     async function loadSiteScripts() {
@@ -30,15 +30,19 @@
                     if (response.status === 200) {
                         try {
                             const data = JSON.parse(response.responseText);
+                            console.log("[Multi-Site Injector] Đã tải file JSON thành công:", data);
                             resolve(data);
                         } catch (error) {
+                            console.error("[Multi-Site Injector] Lỗi khi phân tích JSON:", error);
                             reject(new Error("Lỗi khi phân tích JSON: " + error.message));
                         }
                     } else {
+                        console.error("[Multi-Site Injector] Lỗi khi tải file JSON:", response.status);
                         reject(new Error("Không tải được file JSON: " + response.status));
                     }
                 },
                 onerror: function () {
+                    console.error("[Multi-Site Injector] Lỗi khi tải file JSON");
                     reject(new Error("Lỗi khi tải file JSON"));
                 }
             });
@@ -98,19 +102,30 @@
 
     // Lấy hostname hiện tại (không gồm "www.")
     const currentHost = window.location.hostname.replace(/^www\./, "");
+    console.log("[Multi-Site Injector] Hostname hiện tại:", currentHost);
 
     // Tải danh sách các script từ file JSON
     let siteScripts;
     try {
         siteScripts = await loadSiteScripts();
+        console.log("[Multi-Site Injector] Danh sách script đã tải:", siteScripts);
     } catch (error) {
         console.error("[Multi-Site Injector] Lỗi khi tải danh sách script:", error);
         return;
     }
 
     // Tìm xem hostname có khớp regex nào không
-    const matchedScript = siteScripts.find(site => new RegExp(site.pattern).test(currentHost));
-    if (!matchedScript) return; // Không khớp, thoát luôn
+    const matchedScript = siteScripts.find(site => {
+        const regex = new RegExp(site.pattern);
+        const isMatch = regex.test(currentHost);
+        console.log(`[Multi-Site Injector] Kiểm tra pattern "${site.pattern}" với hostname "${currentHost}":`, isMatch);
+        return isMatch;
+    });
+
+    if (!matchedScript) {
+        console.log("[Multi-Site Injector] Không tìm thấy script phù hợp cho hostname hiện tại.");
+        return; // Không khớp, thoát luôn
+    }
 
     console.log(`[Multi-Site Injector] Trang hợp lệ: ${currentHost}`);
 
