@@ -12,6 +12,7 @@
         #mobiads,
         #an_catfish,
         #headermbads,
+        #topplayermbads,
         #botplayeradsmb {
             display: none !important;
         }
