@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Multi-Site Script Injector
+// @name         Hide ads 
 // @namespace    luxysiv
 // @version      1.3.2
-// @description  Inject and manage scripts for specific websites
+// @description  Inject cosmetic script into website 
 // @author       Mạnh Dương
 // @match        *://*/*
 // @run-at       document-start
@@ -163,4 +163,5 @@
         }
         alert("Đã xóa cache của các script và site-scripts.json.");
     });
+
 })();
