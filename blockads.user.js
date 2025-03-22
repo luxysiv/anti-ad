@@ -163,5 +163,4 @@
         }
         alert("Đã xóa cache của các script và site-scripts.json.");
     });
-
 })();
