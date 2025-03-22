@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Hide ads 
+// @name         Multi-Site Script Injector
 // @namespace    luxysiv
 // @version      1.3.2
-// @description  Inject cosmetic script into website 
+// @description  Inject and manage scripts for specific websites
 // @author       Mạnh Dương
 // @match        *://*/*
 // @run-at       document-start
