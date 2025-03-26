@@ -3,7 +3,9 @@ document.cookie = "popupOpened=true; path=/; expires=Fri, 31 Dec 9999 23:59:59 G
 
 // Inject CSS to hide ad elements
 const css = `
-    #hide_catfish > a {
+    #hide_catfish > a,
+    #catfish_content,
+    .header > div > center {
         display: none !important;
     }
 `;
