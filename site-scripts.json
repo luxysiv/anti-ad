@@ -125,7 +125,7 @@
         "cacheKey": "script_uptodown"
     },
     {
-        "pattern": "motchill",
+        "pattern": "motchill|ohaytv",
         "url": "https://github.com/luxysiv/anti-ads/raw/refs/heads/main/scripts/motchill.js",
         "cacheKey": "script_motchill"
     },
