@@ -57,9 +57,9 @@ function clickSkipButton() {
     }
 }
 
-// Kiểm tra nếu có class ".jw-text-duration" (quảng cáo) thì bỏ qua ngay
+// Hàm kiểm tra nếu có class ".jw-text-duration" (quảng cáo) thì bỏ qua ngay
 function checkAndSkipAd() {
-    const durationElement = document.querySelector('.jw-text-duration');
+    const durationElement = document.querySelector('.jw-icon.jw-icon-inline.jw-text.jw-reset.jw-text-duration');
     const video = document.querySelector('.jw-video');
 
     if (durationElement && video) {
