@@ -57,33 +57,23 @@ function clickSkipButton() {
     }
 }
 
-// Hàm lấy thời lượng video quảng cáo từ class ".jw-text-duration"
-function getAdDuration() {
+// Kiểm tra nếu có class ".jw-text-duration" (quảng cáo) thì bỏ qua ngay
+function checkAndSkipAd() {
     const durationElement = document.querySelector('.jw-text-duration');
-    if (durationElement) {
-        const durationText = durationElement.innerText; // Ví dụ: "00:33"
-        const parts = durationText.split(':').map(Number);
-        if (parts.length === 2) {
-            return parts[0] * 60 + parts[1]; // Chuyển đổi sang giây
-        }
+    const video = document.querySelector('.jw-video');
+
+    if (durationElement && video) {
+        console.log("Ad detected! Skipping...");
+        skipAdVideo(video); // Bỏ qua ngay
+        setTimeout(clickSkipButton, 500); // Nhấn nút "Bỏ qua" nếu có
     }
-    return null;
 }
 
 // Theo dõi DOM để phát hiện quảng cáo
-const observer = new MutationObserver(() => {
-    const adPlayer = document.querySelector('.jw-flag-ads'); // Phát hiện quảng cáo
-    const video = document.querySelector('.jw-video'); // Video hiện tại
-
-    if (adPlayer && video) {
-        const adDuration = getAdDuration(); // Lấy thời lượng video quảng cáo
-        console.log("Ad duration:", adDuration, "seconds");
-        if (adDuration && adDuration <= 30) {
-            skipAdVideo(video); // Bỏ qua quảng cáo nếu thời lượng ≤ 30 giây
-        }
-        setTimeout(clickSkipButton, 500);
-    }
-});
+const observer = new MutationObserver(checkAndSkipAd);
 
 // Bắt đầu theo dõi trang
 observer.observe(document.documentElement, { childList: true, subtree: true });
+
+// Kiểm tra ngay lập tức khi trang tải
+checkAndSkipAd();
