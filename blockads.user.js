@@ -18,19 +18,19 @@
     'use strict';
 
     // URL đến file JSON chứa danh sách các script
-    const SITE_SCRIPTS_URL = "https://raw.githubusercontent.com/luxysiv/anti-ads/main/site-scripts.json"; // Thay bằng URL thực tế của bạn
-    const SITE_SCRIPTS_CACHE_KEY = "cached_site_scripts"; // Key để cache file JSON
+    const SITE_SCRIPTS_URL = "https://raw.githubusercontent.com/luxysiv/anti-ads/main/site-scripts.json";
+    const SITE_SCRIPTS_CACHE_KEY = "cached_site_scripts";
+    const CACHE_VERSION_KEY = "cache_version"; // Key để lưu phiên bản cache
+    const SCRIPT_VERSION = "1.3.2"; // Phải khớp với @version
 
     // Hàm tải file JSON chứa danh sách các script
     async function loadSiteScripts() {
-        // Kiểm tra cache trước
         const cachedScripts = await GM.getValue(SITE_SCRIPTS_CACHE_KEY, null);
         if (cachedScripts) {
             console.log("[Multi-Site Injector] Sử dụng cache cho site-scripts.json");
             return cachedScripts;
         }
 
-        // Nếu không có cache, tải file JSON từ server
         console.log("[Multi-Site Injector] Đang tải site-scripts.json từ server...");
         return new Promise((resolve, reject) => {
             GM.xmlHttpRequest({
@@ -40,128 +40,108 @@
                     if (response.status === 200) {
                         try {
                             const data = JSON.parse(response.responseText);
-                            // Cache lại dữ liệu
                             GM.setValue(SITE_SCRIPTS_CACHE_KEY, data);
                             console.log("[Multi-Site Injector] Đã tải và cache site-scripts.json");
                             resolve(data);
                         } catch (error) {
-                            console.error("[Multi-Site Injector] Lỗi khi phân tích JSON:", error);
-                            reject(new Error("Lỗi khi phân tích JSON: " + error.message));
+                            console.error("[Multi-Site Injector] Lỗi phân tích JSON:", error);
+                            reject(error);
                         }
                     } else {
-                        console.error("[Multi-Site Injector] Lỗi khi tải file JSON:", response.status);
-                        reject(new Error("Không tải được file JSON: " + response.status));
+                        reject(new Error(`Lỗi HTTP: ${response.status}`));
                     }
                 },
-                onerror: function () {
-                    console.error("[Multi-Site Injector] Lỗi khi tải file JSON");
-                    reject(new Error("Lỗi khi tải file JSON"));
-                }
+                onerror: reject
             });
         });
     }
 
     // Hàm tải script & cache lại
     async function loadScriptContent(scriptInfo) {
-        let cached = await GM.getValue(scriptInfo.cacheKey, null);
+        const cached = await GM.getValue(scriptInfo.cacheKey, null);
         if (cached) {
             console.log(`[Multi-Site Injector] Sử dụng cache cho ${scriptInfo.url}`);
             return cached;
-        } else {
-            console.log(`[Multi-Site Injector] Đang tải script từ ${scriptInfo.url}`);
-            return new Promise((resolve, reject) => {
-                GM.xmlHttpRequest({
-                    method: "GET",
-                    url: scriptInfo.url,
-                    onload: async function (response) {
-                        if (response.status === 200) {
-                            const scriptContent = response.responseText;
-                            await GM.setValue(scriptInfo.cacheKey, scriptContent);
-                            resolve(scriptContent);
-                        } else {
-                            reject(new Error(`Không tải được script: ${scriptInfo.url}`));
-                        }
-                    },
-                    onerror: function () {
-                        reject(new Error(`Lỗi khi tải script: ${scriptInfo.url}`));
-                    }
-                });
-            });
         }
+
+        console.log(`[Multi-Site Injector] Đang tải script từ ${scriptInfo.url}`);
+        return new Promise((resolve, reject) => {
+            GM.xmlHttpRequest({
+                method: "GET",
+                url: scriptInfo.url,
+                onload: async function (response) {
+                    if (response.status === 200) {
+                        const content = response.responseText;
+                        await GM.setValue(scriptInfo.cacheKey, content);
+                        resolve(content);
+                    } else {
+                        reject(new Error(`Lỗi HTTP: ${response.status}`));
+                    }
+                },
+                onerror: reject
+            });
+        });
     }
 
-    // Tải và cache tất cả các script khi cài đặt
+    // Tải và cache tất cả script
     async function preloadScripts(siteScripts) {
         for (const site of siteScripts) {
             try {
                 await loadScriptContent(site);
-                console.log(`[Multi-Site Injector] Đã tải và cache script cho ${site.url}`);
+                console.log(`[Multi-Site Injector] Đã cache script: ${site.url}`);
             } catch (error) {
-                console.error(`[Multi-Site Injector] Lỗi khi tải script cho ${site.url}:`, error);
+                console.error(`[Multi-Site Injector] Lỗi tải script ${site.url}:`, error);
             }
         }
     }
 
-    // Kiểm tra nếu script vừa được cài đặt
-    if (typeof GM_addValueChangeListener === 'function') {
-        GM.addValueChangeListener('install', async function (name, oldValue, newValue, remote) {
-            if (newValue === 'installed') {
-                const siteScripts = await loadSiteScripts();
-                await preloadScripts(siteScripts);
-            }
-        });
-    }
-
-    // Lấy hostname hiện tại (không gồm "www.")
-    const currentHost = window.location.hostname.replace(/^www\./, "");
-    console.log("[Multi-Site Injector] Hostname hiện tại:", currentHost);
-
-    // Tải danh sách các script từ file JSON
+    // Xử lý cache khi cập nhật phiên bản
+    const cachedVersion = await GM.getValue(CACHE_VERSION_KEY, '0.0.0');
     let siteScripts;
-    try {
-        siteScripts = await loadSiteScripts();
-        console.log("[Multi-Site Injector] Danh sách script đã tải:", siteScripts);
-    } catch (error) {
-        console.error("[Multi-Site Injector] Lỗi khi tải danh sách script:", error);
-        return;
+
+    if (cachedVersion !== SCRIPT_VERSION) {
+        console.log(`[Multi-Site Injector] Phát hiện phiên bản mới (${SCRIPT_VERSION}), làm mới cache...`);
+        await GM.setValue(SITE_SCRIPTS_CACHE_KEY, null); // Xóa cache cũ
+        siteScripts = await loadSiteScripts(); // Tải lại JSON
+        await preloadScripts(siteScripts); // Tải lại toàn bộ script
+        await GM.setValue(CACHE_VERSION_KEY, SCRIPT_VERSION); // Cập nhật phiên bản
+    } else {
+        siteScripts = await loadSiteScripts(); // Tải từ cache
     }
 
-    // Tìm xem hostname có khớp regex nào không
+    // Kiểm tra hostname hiện tại
+    const currentHost = window.location.hostname.replace(/^www\./, "");
+    console.log("[Multi-Site Injector] Hostname:", currentHost);
+
+    // Tìm script phù hợp
     const matchedScript = siteScripts.find(site => {
         const regex = new RegExp(site.pattern);
-        const isMatch = regex.test(currentHost);
-        console.log(`[Multi-Site Injector] Kiểm tra pattern "${site.pattern}" với hostname "${currentHost}":`, isMatch);
-        return isMatch;
+        return regex.test(currentHost);
     });
 
     if (!matchedScript) {
-        console.log("[Multi-Site Injector] Không tìm thấy script phù hợp cho hostname hiện tại.");
-        return; // Không khớp, thoát luôn
+        console.log("[Multi-Site Injector] Không tìm thấy script phù hợp.");
+        return;
     }
 
-    console.log(`[Multi-Site Injector] Trang hợp lệ: ${currentHost}`);
-
-    // Tải nội dung script & inject vào trang
+    // Inject script vào trang
     try {
         const scriptContent = await loadScriptContent(matchedScript);
-        const scriptElem = document.createElement("script");
-        scriptElem.textContent = scriptContent;
-        document.documentElement.appendChild(scriptElem);
+        const scriptEl = document.createElement('script');
+        scriptEl.textContent = scriptContent;
+        document.documentElement.appendChild(scriptEl);
         console.log(`[Multi-Site Injector] Đã tiêm script cho ${currentHost}`);
     } catch (error) {
-        console.error("[Multi-Site Injector] Lỗi khi tiêm script:", error);
+        console.error("[Multi-Site Injector] Lỗi tiêm script:", error);
     }
 
-    // Menu command để xóa cache
+    // Menu xóa cache
     GM.registerMenuCommand("Clear Script Cache", async () => {
-        // Xóa cache của site-scripts.json
         await GM.setValue(SITE_SCRIPTS_CACHE_KEY, null);
-        // Xóa cache của các script
-        const siteScripts = await loadSiteScripts();
+        await GM.setValue(CACHE_VERSION_KEY, '0.0.0');
         for (const site of siteScripts) {
             await GM.setValue(site.cacheKey, null);
         }
-        alert("Đã xóa cache của các script và site-scripts.json.");
+        alert("Đã xóa toàn bộ cache!");
     });
-
 })();
