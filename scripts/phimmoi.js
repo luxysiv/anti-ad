@@ -1,5 +1,5 @@
 // Set cookies to block popup ads
-document.cookie = "cucre=cucre%20Popunder; path=/; SameSite=Lax;";
+document.cookie = "cucre=cucre%20Popunder; path=/; SameSite=Lax; expires=Fri, 31 Dec 9999 23:59:59 GMT;";
 
 // Add CSS to hide immediately
 const style = document.createElement("style");
