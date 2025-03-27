@@ -17,13 +17,11 @@
 (async function () {
     'use strict';
 
-    // URL đến file JSON chứa danh sách các script
     const SITE_SCRIPTS_URL = "https://raw.githubusercontent.com/luxysiv/anti-ads/main/site-scripts.json";
     const SITE_SCRIPTS_CACHE_KEY = "cached_site_scripts";
-    const CACHE_VERSION_KEY = "cache_version"; // Key để lưu phiên bản cache
-    const SCRIPT_VERSION = "1.3.2"; // Phải khớp với @version
+    const CACHE_VERSION_KEY = "cache_version";
+    const SCRIPT_VERSION = "1.3.2";
 
-    // Hàm tải file JSON chứa danh sách các script
     async function loadSiteScripts() {
         const cachedScripts = await GM.getValue(SITE_SCRIPTS_CACHE_KEY, null);
         if (cachedScripts) {
@@ -56,7 +54,6 @@
         });
     }
 
-    // Hàm tải script & cache lại
     async function loadScriptContent(scriptInfo) {
         const cached = await GM.getValue(scriptInfo.cacheKey, null);
         if (cached) {
@@ -83,7 +80,6 @@
         });
     }
 
-    // Tải và cache tất cả script
     async function preloadScripts(siteScripts) {
         for (const site of siteScripts) {
             try {
@@ -95,47 +91,45 @@
         }
     }
 
-    // Xử lý cache khi cập nhật phiên bản
     const cachedVersion = await GM.getValue(CACHE_VERSION_KEY, '0.0.0');
     let siteScripts;
 
     if (cachedVersion !== SCRIPT_VERSION) {
         console.log(`[Multi-Site Injector] Phát hiện phiên bản mới (${SCRIPT_VERSION}), làm mới cache...`);
-        await GM.setValue(SITE_SCRIPTS_CACHE_KEY, null); // Xóa cache cũ
-        siteScripts = await loadSiteScripts(); // Tải lại JSON
-        await preloadScripts(siteScripts); // Tải lại toàn bộ script
-        await GM.setValue(CACHE_VERSION_KEY, SCRIPT_VERSION); // Cập nhật phiên bản
+        await GM.setValue(SITE_SCRIPTS_CACHE_KEY, null);
+        siteScripts = await loadSiteScripts();
+        await GM.setValue(CACHE_VERSION_KEY, SCRIPT_VERSION);
     } else {
-        siteScripts = await loadSiteScripts(); // Tải từ cache
+        siteScripts = await loadSiteScripts();
     }
 
-    // Kiểm tra hostname hiện tại
     const currentHost = window.location.hostname.replace(/^www\./, "");
     console.log("[Multi-Site Injector] Hostname:", currentHost);
 
-    // Tìm script phù hợp
     const matchedScript = siteScripts.find(site => {
         const regex = new RegExp(site.pattern);
         return regex.test(currentHost);
     });
 
-    if (!matchedScript) {
+    if (matchedScript) {
+        console.log(`[Multi-Site Injector] Đang tải và tiêm script cho ${currentHost}`);
+        try {
+            const scriptContent = await loadScriptContent(matchedScript);
+            const scriptEl = document.createElement('script');
+            scriptEl.textContent = scriptContent;
+            document.documentElement.appendChild(scriptEl);
+            console.log(`[Multi-Site Injector] Đã tiêm script cho ${currentHost}`);
+        } catch (error) {
+            console.error("[Multi-Site Injector] Lỗi tiêm script:", error);
+        }
+    } else {
         console.log("[Multi-Site Injector] Không tìm thấy script phù hợp.");
-        return;
     }
 
-    // Inject script vào trang
-    try {
-        const scriptContent = await loadScriptContent(matchedScript);
-        const scriptEl = document.createElement('script');
-        scriptEl.textContent = scriptContent;
-        document.documentElement.appendChild(scriptEl);
-        console.log(`[Multi-Site Injector] Đã tiêm script cho ${currentHost}`);
-    } catch (error) {
-        console.error("[Multi-Site Injector] Lỗi tiêm script:", error);
+    if (cachedVersion !== SCRIPT_VERSION) {
+        await preloadScripts(siteScripts);
     }
 
-    // Menu xóa cache
     GM.registerMenuCommand("Clear Script Cache", async () => {
         await GM.setValue(SITE_SCRIPTS_CACHE_KEY, null);
         await GM.setValue(CACHE_VERSION_KEY, '0.0.0');
