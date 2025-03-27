@@ -24,6 +24,16 @@ function skipAdVideo(video) {
     }
 }
 
+// Hàm nhấn nút "Bỏ qua quảng cáo" ngay khi nó xuất hiện
+function clickSkipButton() {
+    const skipText = document.querySelector('.jw-skiptext'); // Phần chữ "Bỏ qua quảng cáo"
+
+    if (skipText && skipText.innerText.includes("Bỏ qua quảng cáo")) {
+        console.log("Clicking 'Bỏ qua quảng cáo' button.");
+        skipText.click(); // Nhấn nút ngay khi có thể
+    }
+}
+
 // Theo dõi DOM để phát hiện quảng cáo và skip
 const observer = new MutationObserver(() => {
     const adPlayer = document.querySelector('.jw-flag-ads'); // Player ở trạng thái quảng cáo
@@ -32,6 +42,8 @@ const observer = new MutationObserver(() => {
     if (adPlayer && video) {
         skipAdVideo(video); // Tua video quảng cáo
     }
+
+    clickSkipButton(); // Nhấn nút "Bỏ qua quảng cáo" ngay khi xuất hiện
 });
 
 // Bắt đầu theo dõi toàn bộ trang web
