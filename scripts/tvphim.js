@@ -15,14 +15,12 @@ style.type = "text/css";
 style.textContent = selectors.map(selector => `${selector} { display: none !important; }`).join("\n");
 document.head.appendChild(style);
 
-// Hàm tắt tiếng và tua nhanh video quảng cáo
+// Hàm tua nhanh video quảng cáo
 function skipAdVideo(video) {
-    if (video) {
-        video.muted = true; // Luôn tắt tiếng quảng cáo
-        if (video.duration) {
-            video.currentTime = video.duration; // Tua đến cuối video
-            console.log("Muted and skipped ad video.");
-        }
+    if (video && video.duration) {
+        video.muted = true; // Tắt tiếng quảng cáo
+        video.currentTime = video.duration; // Tua đến cuối video
+        console.log("Skipped ad video.");
     }
 }
 
@@ -37,14 +35,14 @@ function clickSkipButton() {
     }
 }
 
-// Theo dõi DOM để phát hiện quảng cáo và xử lý
+// Theo dõi DOM để phát hiện quảng cáo và skip
 const observer = new MutationObserver(() => {
     const adPlayer = document.querySelector('.jw-flag-ads'); // Player ở trạng thái quảng cáo
     const video = document.querySelector('.jw-video'); // Video trong JW Player
 
     if (adPlayer && video) {
-        skipAdVideo(video); // Tắt tiếng và tua video quảng cáo
-        setTimeout(clickSkipButton, 10); // Nhấn nút "Bỏ qua quảng cáo" nếu có
+        skipAdVideo(video); // Tua video quảng cáo
+        setTimeout(clickSkipButton, 500); // Nhấn nút "Bỏ qua quảng cáo" sau 0.5s
     }
 });
 
