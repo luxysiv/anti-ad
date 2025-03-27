@@ -1,3 +1,6 @@
+// Set a cookie with the key 'popupOpeneds' and value 'true' to prevent showing popup ads
+document.cookie = "popupOpeneds=true; path=/; expires=Fri, 31 Dec 9999 23:59:59 GMT;";
+
 // List of selectors to hide
 const selectors = [
   '[src*="/ads/"][src$=".gif"]',
