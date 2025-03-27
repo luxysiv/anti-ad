@@ -4,6 +4,7 @@ document.cookie = "popupOpeneds=true; path=/; expires=Fri, 31 Dec 9999 23:59:59 
 // List of selectors to hide
 const selectors = [
   '[src*="/ads/"][src$=".gif"]',
+  '[src*="/ads/"][src$=".mp4"]',
   '[id*="floating_ads_"]',
   '[class*="banner-ads"]',
   '[id*="adsmessage"]'
