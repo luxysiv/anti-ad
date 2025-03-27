@@ -7,7 +7,7 @@ const selectors = [
   '[id*="floating_ads_"]',
   '[class*="banner-ads"]',
   '[id*="adsmessage"]',
-  .jwplayer.jw-flag-ads
+  '.jwplayer.jw-flag-ads'
 ];
 
 // Create and add CSS to <head> to hide elements
