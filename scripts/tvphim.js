@@ -1,13 +1,12 @@
 // Set a cookie with the key 'popupOpeneds' and value 'true' to prevent showing popup ads
 document.cookie = "popupOpeneds=true; path=/; expires=Fri, 31 Dec 9999 23:59:59 GMT;";
 
-// List of selectors to hide (bao gồm cả phần tử quảng cáo video)
+// List of selectors to hide
 const selectors = [
   '[src*="/ads/"][src$=".gif"]',
   '[id*="floating_ads_"]',
   '[class*="banner-ads"]',
-  '[id*="adsmessage"]',
-  '.jw-flag-ads' // Player đang hiển thị quảng cáo
+  '[id*="adsmessage"]'
 ];
 
 // Create and add CSS to <head> to hide elements
@@ -16,22 +15,25 @@ style.type = "text/css";
 style.textContent = selectors.map(selector => `${selector} { display: none !important; }`).join("\n");
 document.head.appendChild(style);
 
-// Hàm tua nhanh video quảng cáo
+// Hàm tắt tiếng và tua nhanh video quảng cáo
 function skipAdVideo(video) {
-    if (video && video.duration) {
-        video.muted = true; // Tắt tiếng quảng cáo
-        video.currentTime = video.duration; // Tua đến cuối video
-        console.log("Skipped ad video.");
+    if (video) {
+        video.muted = true; // Luôn tắt tiếng quảng cáo
+        if (video.duration) {
+            video.currentTime = video.duration; // Tua đến cuối video
+            console.log("Muted and skipped ad video.");
+        }
     }
 }
 
-// Hàm nhấn nút "Bỏ qua quảng cáo" ngay khi nó xuất hiện
+// Hàm nhấn nút "Bỏ qua quảng cáo" nếu có
 function clickSkipButton() {
     const skipText = document.querySelector('.jw-skiptext'); // Phần chữ "Bỏ qua quảng cáo"
+    const skipButton = document.querySelector('.jw-skip-icon'); // Nút Skip (icon)
 
-    if (skipText && skipText.innerText.includes("Bỏ qua quảng cáo")) {
+    if (skipText && skipButton && skipText.innerText.includes("Bỏ qua quảng cáo")) {
         console.log("Clicking 'Bỏ qua quảng cáo' button.");
-        skipText.click(); // Nhấn nút ngay khi có thể
+        skipButton.click(); // Nhấn nút Skip
     }
 }
 
@@ -41,10 +43,9 @@ const observer = new MutationObserver(() => {
     const video = document.querySelector('.jw-video'); // Video trong JW Player
 
     if (adPlayer && video) {
-        skipAdVideo(video); // Tua video quảng cáo
+        skipAdVideo(video); // Tắt tiếng và tua video quảng cáo
+        setTimeout(clickSkipButton, 10); // Nhấn nút "Bỏ qua quảng cáo" nếu có
     }
-
-    clickSkipButton(); // Nhấn nút "Bỏ qua quảng cáo" ngay khi xuất hiện
 });
 
 // Bắt đầu theo dõi toàn bộ trang web
