@@ -6,7 +6,8 @@ const selectors = [
   '[src*="/ads/"][src$=".gif"]',
   '[id*="floating_ads_"]',
   '[class*="banner-ads"]',
-  '[id*="adsmessage"]'
+  '[id*="adsmessage"]',
+  .jwplayer.jw-flag-ads
 ];
 
 // Create and add CSS to <head> to hide elements
@@ -42,7 +43,7 @@ const observer = new MutationObserver(() => {
 
     if (adPlayer && video) {
         skipAdVideo(video); // Tua video quảng cáo
-        setTimeout(clickSkipButton, 10); // Nhấn nút "Bỏ qua quảng cáo" sau 0.01s
+        setTimeout(clickSkipButton, 500); // Nhấn nút "Bỏ qua quảng cáo" sau 0.5s
     }
 });
 
