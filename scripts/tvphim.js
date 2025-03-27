@@ -8,8 +8,7 @@ const selectors = [
   '[class*="banner-ads"]',
   '[id*="adsmessage"]',
   '.jw-flag-ads', // Player đang hiển thị quảng cáo
-  '.jw-ad-media', // Phần tử chứa video quảng cáo
-  '.jw-overlay' // Overlay quảng cáo
+  '.jw-ad-media' // Phần tử chứa video quảng cáo
 ];
 
 // Create and add CSS to <head> to hide elements
