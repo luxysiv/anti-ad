@@ -23,6 +23,9 @@
     const CACHE_VERSION_KEY = "cache_version"; // Key để lưu phiên bản cache
     const SCRIPT_VERSION = "1.3.2"; // Phải khớp với @version
 
+    // Personal Access Token - Thay 'YOUR_PERSONAL_ACCESS_TOKEN' bằng token thực tế của bạn
+    const GITHUB_TOKEN = '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';
+
     // Hàm tải file JSON chứa danh sách các script
     async function loadSiteScripts() {
         const cachedScripts = await GM.getValue(SITE_SCRIPTS_CACHE_KEY, null);
@@ -36,10 +39,13 @@
             GM.xmlHttpRequest({
                 method: "GET",
                 url: SITE_SCRIPTS_URL,
+                headers: {
+                    "Authorization": `token ${GITHUB_TOKEN}`
+                },
                 onload: function (response) {
                     if (response.status === 200) {
                         try {
-                            const data = JSON.parse(response.responseText);
+                            const data = JSON.parse(atob(JSON.parse(response.responseText).content));
                             GM.setValue(SITE_SCRIPTS_CACHE_KEY, data);
                             console.log("[Multi-Site Injector] Đã tải và cache site-scripts.json");
                             resolve(data);
@@ -69,6 +75,9 @@
             GM.xmlHttpRequest({
                 method: "GET",
                 url: scriptInfo.url,
+                headers: {
+                    "Authorization": `token ${GITHUB_TOKEN}`
+                },
                 onload: async function (response) {
                     if (response.status === 200) {
                         const content = response.responseText;
@@ -84,13 +93,31 @@
     }
 
     // Tải và cache tất cả script
-    async function preloadScripts(siteScripts) {
-        for (const site of siteScripts) {
+    async function preloadScripts(siteScripts, currentHost) {
+        // Tìm script phù hợp với host hiện tại và tải nó trước
+        const matchedScript = siteScripts.find(site => {
+            const regex = new RegExp(site.pattern);
+            return regex.test(currentHost);
+        });
+
+        if (matchedScript) {
             try {
-                await loadScriptContent(site);
-                console.log(`[Multi-Site Injector] Đã cache script: ${site.url}`);
+                await loadScriptContent(matchedScript);
+                console.log(`[Multi-Site Injector] Đã cache script: ${matchedScript.url}`);
             } catch (error) {
-                console.error(`[Multi-Site Injector] Lỗi tải script ${site.url}:`, error);
+                console.error(`[Multi-Site Injector] Lỗi tải script ${matchedScript.url}:`, error);
+            }
+        }
+
+        // Tải các script còn lại
+        for (const site of siteScripts) {
+            if (site !== matchedScript) {
+                try {
+                    await loadScriptContent(site);
+                    console.log(`[Multi-Site Injector] Đã cache script: ${site.url}`);
+                } catch (error) {
+                    console.error(`[Multi-Site Injector] Lỗi tải script ${site.url}:`, error);
+                }
             }
         }
     }
@@ -103,10 +130,13 @@
         console.log(`[Multi-Site Injector] Phát hiện phiên bản mới (${SCRIPT_VERSION}), làm mới cache...`);
         await GM.setValue(SITE_SCRIPTS_CACHE_KEY, null); // Xóa cache cũ
         siteScripts = await loadSiteScripts(); // Tải lại JSON
-        await preloadScripts(siteScripts); // Tải lại toàn bộ script
+        const currentHost = window.location.hostname.replace(/^www\./, "");
+        await preloadScripts(siteScripts, currentHost); // Tải lại toàn bộ script
         await GM.setValue(CACHE_VERSION_KEY, SCRIPT_VERSION); // Cập nhật phiên bản
     } else {
         siteScripts = await loadSiteScripts(); // Tải từ cache
+        const currentHost = window.location.hostname.replace(/^www\./, "");
+        await preloadScripts(siteScripts, currentHost); // Tải lại toàn bộ script
     }
 
     // Kiểm tra hostname hiện tại
