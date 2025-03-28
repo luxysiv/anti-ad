@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Hide ads 
 // @namespace    luxysiv
-// @version      1.3.3
-// @description  Inject cosmetic script into website and block ads
+// @version      1.3.2
+// @description  Inject cosmetic script into website 
 // @author       Mạnh Dương
 // @match        *://*/*
 // @run-at       document-start
@@ -17,27 +17,10 @@
 (async function () {
     'use strict';
 
-    // 1️⃣ Chặn quảng cáo bằng Property Override (giống "abort-on-property-read")
-    const blockAdsProperties = ['adsEnabled', 'showAds', 'googleAds'];
-    blockAdsProperties.forEach(prop => {
-        Object.defineProperty(window, prop, { get: () => false, set: () => {} });
-    });
-
-    // 2️⃣ Ghi đè các hàm hiển thị quảng cáo (giống "abort-current-script")
-    const blockAdsFunctions = ['loadAds', 'displayAds', 'renderAds'];
-    blockAdsFunctions.forEach(fn => {
-        window[fn] = function() {}; // Ghi đè thành hàm rỗng
-    });
-
-    // 3️⃣ Bypass Anti-AdBlock Detection
-    Object.defineProperty(window, 'BlockAdBlock', { get: () => null, set: () => {} });
-
-    console.log("[AdBlock] Đã kích hoạt bộ lọc chặn quảng cáo.");
-
     const SITE_SCRIPTS_URL = "https://raw.githubusercontent.com/luxysiv/anti-ads/main/site-scripts.json";
     const SITE_SCRIPTS_CACHE_KEY = "cached_site_scripts";
     const CACHE_VERSION_KEY = "cache_version";
-    const SCRIPT_VERSION = "1.3.3";
+    const SCRIPT_VERSION = "1.3.2";
 
     async function loadSiteScripts() {
         const cachedScripts = await GM.getValue(SITE_SCRIPTS_CACHE_KEY, null);
