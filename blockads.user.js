@@ -6,6 +6,7 @@
 // @author       Mạnh Dương
 // @match        *://*/*
 // @run-at       document-start
+// @require      https://raw.githubusercontent.com/luxysiv/anti-ads/refs/heads/main/scripts/anti-adblock.js
 // @grant        GM.xmlHttpRequest
 // @grant        GM.getValue
 // @grant        GM.setValue
