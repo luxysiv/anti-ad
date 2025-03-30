@@ -23,6 +23,7 @@ style.textContent = `
   [class*="modal-"].show,
   div.d-sm-none.group-link:nth-of-type(3) {
     display: none !important;
+    visibility: hidden !important;
   }
 `;
 document.head.appendChild(style);
