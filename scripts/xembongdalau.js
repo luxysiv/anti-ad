@@ -9,7 +9,7 @@ style.textContent = `
   [class*="bbURL"],
   [class="bbColor"],
   [id*="partner"],
-  [class*="for-mobile"][class*="size-728x90"][class*="-inner"],
+  [class*="size-728x90"],
   [src*="images/dt"][src$=".gif"],
   [src*="wp-content/uploads"][src$=".gif"],
   [href^="/go"],
