@@ -18,7 +18,7 @@
 (async function () {
     'use strict';
 
-    const SITE_SCRIPTS_URL = "https://raw.githubusercontent.com/luxysiv/anti-ads/main/site-scripts.json";
+    const SITE_SCRIPTS_URL = "https://luxysiv.github.io/anti-ads/site-scripts.json";
     const SITE_SCRIPTS_CACHE_KEY = "cached_site_scripts";
     const CACHE_VERSION_KEY = "cache_version";
     const SCRIPT_VERSION = "1.3.2";
