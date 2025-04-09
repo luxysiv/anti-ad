@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Hide ads (Kiwi-compatible)
+// @name         Hide ads (Kiwi-compatible, auto clear with ?clear-cache)
 // @namespace    luxysiv
-// @version      1.4.0
-// @description  Inject cosmetic script into websites (Kiwi-compatible)
+// @version      1.4.3
+// @description  Inject cosmetic script into websites (Kiwi-compatible). Add ?clear-cache to URL to clear cache.
 // @author       Mạnh Dương
 // @match        *://*/*
 // @run-at       document-start
@@ -12,10 +12,18 @@
 (async function () {
     'use strict';
 
+    const SCRIPT_VERSION = "1.4.3";
     const SITE_SCRIPTS_URL = "https://luxysiv.github.io/anti-ads/site-scripts.json";
     const SITE_SCRIPTS_CACHE_KEY = "cached_site_scripts";
     const CACHE_VERSION_KEY = "cache_version";
-    const SCRIPT_VERSION = "1.4.0";
+
+    // Check ?clear-cache
+    if (location.search.includes("clear-cache")) {
+        localStorage.clear();
+        alert("This page's cache has been cleared.!");
+        location.href = location.origin + location.pathname; // reload lại trang không có ?clear-cache
+        return;
+    }
 
     function getCache(key, defaultValue = null) {
         const raw = localStorage.getItem(key);
@@ -105,14 +113,4 @@
     } else {
         console.log("[Multi-Site Injector] No matching script found.");
     }
-
-    // OPTIONAL: Add keyboard shortcut to clear cache (press 'Shift + Alt + C')
-    window.addEventListener("keydown", (e) => {
-        if (e.shiftKey && e.altKey && e.code === "KeyC") {
-            localStorage.removeItem(SITE_SCRIPTS_CACHE_KEY);
-            localStorage.removeItem(CACHE_VERSION_KEY);
-            siteScripts.forEach(site => localStorage.removeItem(site.cacheKey));
-            alert("Đã xóa toàn bộ cache!");
-        }
-    });
 })();
