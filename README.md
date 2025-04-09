@@ -1,3 +1,3 @@
 # Userscripts
 
-[Hide ads](https://luxysiv.github.io/anti-ads/blockads.user.js)
+[Hide ads](https://luxysiv.github.io/anti-ads/blockads-tpm.user.js)
