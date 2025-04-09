@@ -1,17 +1,11 @@
 // ==UserScript==
-// @name         Hide ads 
+// @name         Hide ads (Kiwi-compatible)
 // @namespace    luxysiv
-// @version      1.3.2
-// @description  Inject cosmetic script into website 
+// @version      1.4.0
+// @description  Inject cosmetic script into websites (Kiwi-compatible)
 // @author       Mạnh Dương
 // @match        *://*/*
 // @run-at       document-start
-// @require      https://raw.githubusercontent.com/luxysiv/anti-ads/refs/heads/main/scripts/anti-adblock.js
-// @grant        GM.xmlHttpRequest
-// @grant        GM.getValue
-// @grant        GM.setValue
-// @grant        GM.registerMenuCommand
-// @grant        GM.addValueChangeListener
 // @icon         https://github.com/luxysiv/anti-ads/raw/refs/heads/main/icon.png
 // ==/UserScript==
 
@@ -21,91 +15,77 @@
     const SITE_SCRIPTS_URL = "https://luxysiv.github.io/anti-ads/site-scripts.json";
     const SITE_SCRIPTS_CACHE_KEY = "cached_site_scripts";
     const CACHE_VERSION_KEY = "cache_version";
-    const SCRIPT_VERSION = "1.3.2";
+    const SCRIPT_VERSION = "1.4.0";
+
+    function getCache(key, defaultValue = null) {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : defaultValue;
+    }
+
+    function setCache(key, value) {
+        localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    async function fetchJSON(url) {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+        return await res.json();
+    }
+
+    async function fetchText(url) {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+        return await res.text();
+    }
 
     async function loadSiteScripts() {
-        const cachedScripts = await GM.getValue(SITE_SCRIPTS_CACHE_KEY, null);
+        const cachedScripts = getCache(SITE_SCRIPTS_CACHE_KEY);
         if (cachedScripts) {
-            console.log("[Multi-Site Injector] Sử dụng cache cho site-scripts.json");
+            console.log("[Multi-Site Injector] Using cached site-scripts.json");
             return cachedScripts;
         }
 
-        console.log("[Multi-Site Injector] Đang tải site-scripts.json từ server...");
-        return new Promise((resolve, reject) => {
-            GM.xmlHttpRequest({
-                method: "GET",
-                url: SITE_SCRIPTS_URL,
-                onload: function (response) {
-                    if (response.status === 200) {
-                        try {
-                            const data = JSON.parse(response.responseText);
-                            GM.setValue(SITE_SCRIPTS_CACHE_KEY, data);
-                            console.log("[Multi-Site Injector] Đã tải và cache site-scripts.json");
-                            resolve(data);
-                        } catch (error) {
-                            console.error("[Multi-Site Injector] Lỗi phân tích JSON:", error);
-                            reject(error);
-                        }
-                    } else {
-                        reject(new Error(`Lỗi HTTP: ${response.status}`));
-                    }
-                },
-                onerror: reject
-            });
-        });
+        try {
+            console.log("[Multi-Site Injector] Fetching site-scripts.json from server...");
+            const data = await fetchJSON(SITE_SCRIPTS_URL);
+            setCache(SITE_SCRIPTS_CACHE_KEY, data);
+            return data;
+        } catch (e) {
+            console.error("[Multi-Site Injector] Failed to fetch site-scripts.json:", e);
+            return [];
+        }
     }
 
     async function loadScriptContent(scriptInfo) {
-        const cached = await GM.getValue(scriptInfo.cacheKey, null);
+        const cached = getCache(scriptInfo.cacheKey);
         if (cached) {
-            console.log(`[Multi-Site Injector] Sử dụng cache cho ${scriptInfo.url}`);
+            console.log(`[Multi-Site Injector] Using cached script: ${scriptInfo.url}`);
             return cached;
         }
 
-        console.log(`[Multi-Site Injector] Đang tải script từ ${scriptInfo.url}`);
-        return new Promise((resolve, reject) => {
-            GM.xmlHttpRequest({
-                method: "GET",
-                url: scriptInfo.url,
-                onload: async function (response) {
-                    if (response.status === 200) {
-                        const content = response.responseText;
-                        await GM.setValue(scriptInfo.cacheKey, content);
-                        resolve(content);
-                    } else {
-                        reject(new Error(`Lỗi HTTP: ${response.status}`));
-                    }
-                },
-                onerror: reject
-            });
-        });
-    }
-
-    async function preloadScripts(siteScripts) {
-        for (const site of siteScripts) {
-            try {
-                await loadScriptContent(site);
-                console.log(`[Multi-Site Injector] Đã cache script: ${site.url}`);
-            } catch (error) {
-                console.error(`[Multi-Site Injector] Lỗi tải script ${site.url}:`, error);
-            }
+        try {
+            console.log(`[Multi-Site Injector] Fetching script from ${scriptInfo.url}`);
+            const content = await fetchText(scriptInfo.url);
+            setCache(scriptInfo.cacheKey, content);
+            return content;
+        } catch (e) {
+            console.error(`[Multi-Site Injector] Failed to fetch script: ${scriptInfo.url}`, e);
+            return "";
         }
     }
 
-    const cachedVersion = await GM.getValue(CACHE_VERSION_KEY, '0.0.0');
+    const currentHost = window.location.hostname.replace(/^www\./, "");
+    const cachedVersion = getCache(CACHE_VERSION_KEY, '0.0.0');
     let siteScripts;
 
     if (cachedVersion !== SCRIPT_VERSION) {
-        console.log(`[Multi-Site Injector] Phát hiện phiên bản mới (${SCRIPT_VERSION}), làm mới cache...`);
-        await GM.setValue(SITE_SCRIPTS_CACHE_KEY, null);
+        console.log(`[Multi-Site Injector] New version detected (${SCRIPT_VERSION}), refreshing cache...`);
+        localStorage.removeItem(SITE_SCRIPTS_CACHE_KEY);
         siteScripts = await loadSiteScripts();
-        await GM.setValue(CACHE_VERSION_KEY, SCRIPT_VERSION);
+        setCache(CACHE_VERSION_KEY, SCRIPT_VERSION);
     } else {
         siteScripts = await loadSiteScripts();
     }
-
-    const currentHost = window.location.hostname.replace(/^www\./, "");
-    console.log("[Multi-Site Injector] Hostname:", currentHost);
 
     const matchedScript = siteScripts.find(site => {
         const regex = new RegExp(site.pattern);
@@ -113,30 +93,26 @@
     });
 
     if (matchedScript) {
-        console.log(`[Multi-Site Injector] Đang tải và tiêm script cho ${currentHost}`);
         try {
             const scriptContent = await loadScriptContent(matchedScript);
             const scriptEl = document.createElement('script');
             scriptEl.textContent = scriptContent;
             document.documentElement.appendChild(scriptEl);
-            console.log(`[Multi-Site Injector] Đã tiêm script cho ${currentHost}`);
-        } catch (error) {
-            console.error("[Multi-Site Injector] Lỗi tiêm script:", error);
+            console.log(`[Multi-Site Injector] Injected script for ${currentHost}`);
+        } catch (e) {
+            console.error("[Multi-Site Injector] Script injection failed:", e);
         }
     } else {
-        console.log("[Multi-Site Injector] Không tìm thấy script phù hợp.");
+        console.log("[Multi-Site Injector] No matching script found.");
     }
 
-    if (cachedVersion !== SCRIPT_VERSION) {
-        await preloadScripts(siteScripts);
-    }
-
-    GM.registerMenuCommand("Clear Script Cache", async () => {
-        await GM.setValue(SITE_SCRIPTS_CACHE_KEY, null);
-        await GM.setValue(CACHE_VERSION_KEY, '0.0.0');
-        for (const site of siteScripts) {
-            await GM.setValue(site.cacheKey, null);
+    // OPTIONAL: Add keyboard shortcut to clear cache (press 'Shift + Alt + C')
+    window.addEventListener("keydown", (e) => {
+        if (e.shiftKey && e.altKey && e.code === "KeyC") {
+            localStorage.removeItem(SITE_SCRIPTS_CACHE_KEY);
+            localStorage.removeItem(CACHE_VERSION_KEY);
+            siteScripts.forEach(site => localStorage.removeItem(site.cacheKey));
+            alert("Đã xóa toàn bộ cache!");
         }
-        alert("Đã xóa toàn bộ cache!");
     });
 })();
