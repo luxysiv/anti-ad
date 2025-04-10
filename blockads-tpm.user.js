@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hide ads 
 // @namespace    luxysiv
-// @version      1.3.5
+// @version      1.3.6
 // @description  Inject cosmetic script into website 
 // @author       Mạnh Dương
 // @match        *://*/*
@@ -10,6 +10,7 @@
 // @grant        GM.getValue
 // @grant        GM.setValue
 // @grant        GM.registerMenuCommand
+// @grant        GM.addElement
 // @icon         https://github.com/luxysiv/anti-ads/raw/refs/heads/main/icon.png
 // ==/UserScript==
 
@@ -19,7 +20,7 @@
     const SITE_SCRIPTS_URL = "https://api.github.com/repos/luxysiv/anti-ads/contents/site-scripts.json?ref=main";
     const SITE_SCRIPTS_CACHE_KEY = "cached_site_scripts";
     const CACHE_VERSION_KEY = "cache_version";
-    const SCRIPT_VERSION = "1.3.5";
+    const SCRIPT_VERSION = "1.3.6";
 
     async function fetchRawContent(url) {
         return new Promise((resolve, reject) => {
@@ -80,40 +81,23 @@
         }
     }
 
-    function tryInjectScript(scriptContent, scriptUrl = "") {
+    function tryInjectScript(scriptContent) {
         const attempts = [
             () => {
                 const el = document.createElement("script");
                 el.textContent = scriptContent;
                 document.documentElement.appendChild(el);
-                console.log("[Hide Ads] Phương án #1: Inject bằng textContent thành công");
+                console.log("[Hide Ads] Inject bằng textContent thành công (phương án #1)");
             },
             () => {
-                const fn = new Function(scriptContent);
-                fn();
-                console.log("[Hide Ads] Phương án #2: Inject bằng Function() thành công");
-            },
-            () => {
-                const iframe = document.createElement("iframe");
-                iframe.style.display = "none";
-                iframe.sandbox = "allow-scripts";
-                iframe.srcdoc = `<script>${scriptContent}<\/script>`;
-                document.body.appendChild(iframe);
-                console.log("[Hide Ads] Phương án #3: Inject bằng iframe sandbox thành công");
-            },
-            () => {
-                const blob = new Blob([scriptContent], { type: "text/javascript" });
-                const url = URL.createObjectURL(blob);
-                const s = document.createElement("script");
-                s.src = url;
-                document.documentElement.appendChild(s);
-                console.log("[Hide Ads] Phương án #4: Inject bằng blob src thành công");
-            },
-            () => {
-                const s = document.createElement("script");
-                s.setAttribute("src", scriptUrl);
-                document.documentElement.appendChild(s);
-                console.log("[Hide Ads] Phương án #5: Inject bằng script src thành công");
+                if (typeof GM.addElement === 'function') {
+                    GM.addElement('script', {
+                        textContent: scriptContent
+                    });
+                    console.log("[Hide Ads] Inject bằng GM.addElement thành công (phương án #2)");
+                } else {
+                    throw new Error("GM.addElement không khả dụng");
+                }
             }
         ];
 
@@ -121,7 +105,9 @@
             try {
                 fn();
                 return true;
-            } catch (_) {}
+            } catch (e) {
+                console.warn("[Hide Ads] Phương án inject thất bại:", e);
+            }
         }
 
         return false;
@@ -143,9 +129,9 @@
     if (matchedScript) {
         console.log(`[Hide Ads] Phát hiện host khớp: ${currentHost}, đang inject...`);
         const scriptContent = await loadScriptContent(matchedScript);
-        const success = tryInjectScript(scriptContent, matchedScript.url);
+        const success = tryInjectScript(scriptContent);
         if (!success) {
-            console.log("[Hide Ads] Tất cả phương án inject đều bị chặn bởi CSP.");
+            console.log("[Hide Ads] Inject thất bại – tất cả phương án đều bị chặn.");
         }
     } else {
         console.log("[Hide Ads] Không tìm thấy script phù hợp với hostname.");
