@@ -2,6 +2,8 @@
 const styleTag = document.createElement('style');
 styleTag.textContent = `
   .box-kd-300,
+  .mt20.netzero.investment-business.box-category,
+  .ldp-mode2.netzero.investment-business.box-category,
   [class="inner_section section_wrap_poll mb20"],
   [id="button-adblock"],
   [id="supper_masthead"],
