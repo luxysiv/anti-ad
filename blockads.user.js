@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Hide ads (Kiwi-compatible, auto clear with ?clear-cache)
+// @name         Hide ads
 // @namespace    luxysiv
-// @version      1.4.3
-// @description  Inject cosmetic script into websites (Kiwi-compatible). Add ?clear-cache to URL to clear cache.
+// @version      1.4.4
+// @description  Inject cosmetic script into websites
 // @author       Mạnh Dương
 // @match        *://*/*
 // @run-at       document-start
@@ -12,16 +12,15 @@
 (async function () {
     'use strict';
 
-    const SCRIPT_VERSION = "1.4.3";
-    const SITE_SCRIPTS_URL = "https://luxysiv.github.io/anti-ads/site-scripts.json";
+    const SCRIPT_VERSION = "1.4.4";
+    const SITE_SCRIPTS_URL = "https://api.github.com/repos/luxysiv/anti-ads/contents/site-scripts.json?ref=main";
     const SITE_SCRIPTS_CACHE_KEY = "cached_site_scripts";
     const CACHE_VERSION_KEY = "cache_version";
 
-    // Check ?clear-cache
     if (location.search.includes("clear-cache")) {
         localStorage.clear();
-        alert("This page's cache has been cleared.!");
-        location.href = location.origin + location.pathname; // reload lại trang không có ?clear-cache
+        alert("Cache đã được xóa!");
+        location.href = location.origin + location.pathname;
         return;
     }
 
@@ -34,32 +33,35 @@
         localStorage.setItem(key, JSON.stringify(value));
     }
 
-    async function fetchJSON(url) {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-        return await res.json();
-    }
-
-    async function fetchText(url) {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-        return await res.text();
+    async function fetchScriptContent(url) {
+        if (url.includes('api.github.com')) {
+            const response = await fetch(url, {
+                headers: { 'Accept': 'application/vnd.github.v3.raw' }
+            });
+            if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+            return await response.text();
+        } else {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+            return await response.text();
+        }
     }
 
     async function loadSiteScripts() {
         const cachedScripts = getCache(SITE_SCRIPTS_CACHE_KEY);
         if (cachedScripts) {
-            console.log("[Multi-Site Injector] Using cached site-scripts.json");
+            console.log("[Hide Ads] Sử dụng cache cho site-scripts.json");
             return cachedScripts;
         }
 
+        console.log("[Hide Ads] Đang tải site-scripts.json từ GitHub API...");
         try {
-            console.log("[Multi-Site Injector] Fetching site-scripts.json from server...");
-            const data = await fetchJSON(SITE_SCRIPTS_URL);
+            const content = await fetchScriptContent(SITE_SCRIPTS_URL);
+            const data = JSON.parse(content);
             setCache(SITE_SCRIPTS_CACHE_KEY, data);
             return data;
         } catch (e) {
-            console.error("[Multi-Site Injector] Failed to fetch site-scripts.json:", e);
+            console.error("[Hide Ads] Lỗi tải site-scripts.json:", e);
             return [];
         }
     }
@@ -67,18 +69,45 @@
     async function loadScriptContent(scriptInfo) {
         const cached = getCache(scriptInfo.cacheKey);
         if (cached) {
-            console.log(`[Multi-Site Injector] Using cached script: ${scriptInfo.url}`);
+            console.log(`[Hide Ads] Sử dụng cache cho ${scriptInfo.url}`);
             return cached;
         }
 
+        console.log(`[Hide Ads] Đang tải script từ ${scriptInfo.url}`);
         try {
-            console.log(`[Multi-Site Injector] Fetching script from ${scriptInfo.url}`);
-            const content = await fetchText(scriptInfo.url);
+            const content = await fetchScriptContent(scriptInfo.url);
             setCache(scriptInfo.cacheKey, content);
             return content;
         } catch (e) {
-            console.error(`[Multi-Site Injector] Failed to fetch script: ${scriptInfo.url}`, e);
+            console.error(`[Hide Ads] Lỗi tải script ${scriptInfo.url}:`, e);
             return "";
+        }
+    }
+
+    async function injectScriptFallback(scriptContent) {
+        try {
+            const blob = new Blob([scriptContent], { type: 'text/javascript' });
+            const blobUrl = URL.createObjectURL(blob);
+            const scriptEl = document.createElement('script');
+            scriptEl.src = blobUrl;
+            document.documentElement.appendChild(scriptEl);
+            console.log("[Hide Ads] Đã tiêm script bằng blob URL");
+        } catch (e1) {
+            console.warn("[Hide Ads] Blob URL bị chặn, thử fallback Function():", e1);
+            try {
+                (new Function(scriptContent))();
+                console.log("[Hide Ads] Đã tiêm script bằng Function()");
+            } catch (e2) {
+                console.warn("[Hide Ads] Function() bị chặn, thử textContent:", e2);
+                try {
+                    const scriptEl = document.createElement('script');
+                    scriptEl.textContent = scriptContent;
+                    document.documentElement.appendChild(scriptEl);
+                    console.log("[Hide Ads] Đã tiêm script bằng textContent");
+                } catch (e3) {
+                    console.error("[Hide Ads] Tất cả phương án inject đều thất bại:", e3);
+                }
+            }
         }
     }
 
@@ -87,7 +116,7 @@
     let siteScripts;
 
     if (cachedVersion !== SCRIPT_VERSION) {
-        console.log(`[Multi-Site Injector] New version detected (${SCRIPT_VERSION}), refreshing cache...`);
+        console.log(`[Hide Ads] Phiên bản mới (${SCRIPT_VERSION}), làm mới cache...`);
         localStorage.removeItem(SITE_SCRIPTS_CACHE_KEY);
         siteScripts = await loadSiteScripts();
         setCache(CACHE_VERSION_KEY, SCRIPT_VERSION);
@@ -103,14 +132,12 @@
     if (matchedScript) {
         try {
             const scriptContent = await loadScriptContent(matchedScript);
-            const scriptEl = document.createElement('script');
-            scriptEl.textContent = scriptContent;
-            document.documentElement.appendChild(scriptEl);
-            console.log(`[Multi-Site Injector] Injected script for ${currentHost}`);
+            await injectScriptFallback(scriptContent);
+            console.log(`[Hide Ads] Đã tiêm script cho ${currentHost}`);
         } catch (e) {
-            console.error("[Multi-Site Injector] Script injection failed:", e);
+            console.error("[Hide Ads] Lỗi tiêm script:", e);
         }
     } else {
-        console.log("[Multi-Site Injector] No matching script found.");
+        console.log("[Hide Ads] Không tìm thấy script phù hợp.");
     }
 })();
