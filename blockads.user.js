@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hide ads
 // @namespace    luxysiv
-// @version      1.4.4
+// @version      1.4.5
 // @description  Inject cosmetic script into websites
 // @author       Mạnh Dương
 // @match        *://*/*
@@ -12,10 +12,11 @@
 (async function () {
     'use strict';
 
-    const SCRIPT_VERSION = "1.4.4";
+    const SCRIPT_VERSION = "1.4.5";
     const SITE_SCRIPTS_URL = "https://api.github.com/repos/luxysiv/anti-ads/contents/site-scripts.json?ref=main";
     const SITE_SCRIPTS_CACHE_KEY = "cached_site_scripts";
     const CACHE_VERSION_KEY = "cache_version";
+    const currentHost = window.location.hostname.replace(/^www\./, "");
 
     if (location.search.includes("clear-cache")) {
         localStorage.clear();
@@ -34,17 +35,12 @@
     }
 
     async function fetchScriptContent(url) {
-        if (url.includes('api.github.com')) {
-            const response = await fetch(url, {
-                headers: { 'Accept': 'application/vnd.github.v3.raw' }
-            });
-            if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-            return await response.text();
-        } else {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-            return await response.text();
-        }
+        const headers = url.includes('api.github.com')
+            ? { 'Accept': 'application/vnd.github.v3.raw' }
+            : {};
+        const response = await fetch(url, { headers });
+        if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+        return await response.text();
     }
 
     async function loadSiteScripts() {
@@ -84,34 +80,53 @@
         }
     }
 
-    async function injectScriptFallback(scriptContent) {
-        try {
-            const blob = new Blob([scriptContent], { type: 'text/javascript' });
-            const blobUrl = URL.createObjectURL(blob);
-            const scriptEl = document.createElement('script');
-            scriptEl.src = blobUrl;
-            document.documentElement.appendChild(scriptEl);
-            console.log("[Hide Ads] Đã tiêm script bằng blob URL");
-        } catch (e1) {
-            console.warn("[Hide Ads] Blob URL bị chặn, thử fallback Function():", e1);
-            try {
-                (new Function(scriptContent))();
-                console.log("[Hide Ads] Đã tiêm script bằng Function()");
-            } catch (e2) {
-                console.warn("[Hide Ads] Function() bị chặn, thử textContent:", e2);
-                try {
-                    const scriptEl = document.createElement('script');
-                    scriptEl.textContent = scriptContent;
-                    document.documentElement.appendChild(scriptEl);
-                    console.log("[Hide Ads] Đã tiêm script bằng textContent");
-                } catch (e3) {
-                    console.error("[Hide Ads] Tất cả phương án inject đều thất bại:", e3);
-                }
-            }
-        }
+    async function injectByFunction(scriptContent) {
+        new Function(scriptContent)();
+        console.log("[Hide Ads] Đã tiêm script bằng Function()");
     }
 
-    const currentHost = window.location.hostname.replace(/^www\./, "");
+    async function injectByBlob(scriptContent) {
+        const blob = new Blob([scriptContent], { type: 'text/javascript' });
+        const blobUrl = URL.createObjectURL(blob);
+        const scriptEl = document.createElement('script');
+        scriptEl.src = blobUrl;
+        document.documentElement.appendChild(scriptEl);
+        console.log("[Hide Ads] Đã tiêm script bằng blob URL");
+    }
+
+    async function injectScriptSmart(scriptContent, patternKey) {
+        const injectMethodKey = `inject_method_${patternKey}`;
+        const cachedMethod = getCache(injectMethodKey);
+
+        const methods = {
+            function: injectByFunction,
+            blob: injectByBlob
+        };
+
+        const tryInject = async (method) => {
+            try {
+                await methods[method](scriptContent);
+                setCache(injectMethodKey, method);
+                return true;
+            } catch {
+                return false;
+            }
+        };
+
+        if (cachedMethod && methods[cachedMethod]) {
+            const ok = await tryInject(cachedMethod);
+            if (ok) return;
+        }
+
+        for (const method of ['function', 'blob']) {
+            if (method === cachedMethod) continue;
+            const ok = await tryInject(method);
+            if (ok) return;
+        }
+
+        console.error("[Hide Ads] Tất cả phương án inject đều thất bại.");
+    }
+
     const cachedVersion = getCache(CACHE_VERSION_KEY, '0.0.0');
     let siteScripts;
 
@@ -132,7 +147,7 @@
     if (matchedScript) {
         try {
             const scriptContent = await loadScriptContent(matchedScript);
-            await injectScriptFallback(scriptContent);
+            await injectScriptSmart(scriptContent, matchedScript.pattern);
             console.log(`[Hide Ads] Đã tiêm script cho ${currentHost}`);
         } catch (e) {
             console.error("[Hide Ads] Lỗi tiêm script:", e);
