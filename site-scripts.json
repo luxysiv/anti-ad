@@ -1,152 +1,152 @@
 [
   {
     "pattern": "\\.?vnexpress\\.net$",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/vnexpress.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/vnexpress.js?ref=main",
     "cacheKey": "script_vnexpress"
   },
   {
     "pattern": "\\.?bongdaplus\\.vn$",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/bongdaplus.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/bongdaplus.js?ref=main",
     "cacheKey": "script_bongdaplus"
   },
   {
     "pattern": "phimmoichill",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/phimmoichill.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/phimmoichill.js?ref=main",
     "cacheKey": "script_phimmoichill"
   },
   {
     "pattern": "truyensex",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/truyensex.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/truyensex.js?ref=main",
     "cacheKey": "script_truyensex"
   },
   {
     "pattern": "youtube\\.com$",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/youtube.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/youtube.js?ref=main",
     "cacheKey": "script_youtube"
   },
   {
     "pattern": "phimnhanh",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/phimnhanh.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/phimnhanh.js?ref=main",
     "cacheKey": "script_phimnhanh"
   },
   {
     "pattern": "\\.?24h\\.com\\.vn$",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/24h.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/24h.js?ref=main",
     "cacheKey": "script_24h"
   },
   {
     "pattern": "\\.?tuoitre\\.vn$",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/tuoitre.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/tuoitre.js?ref=main",
     "cacheKey": "script_tuoitre"
   },
   {
     "pattern": "animevietsub",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/animevietsub.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/animevietsub.js?ref=main",
     "cacheKey": "script_animevietsub"
   },
   {
     "pattern": "tvphim",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/tvphim.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/tvphim.js?ref=main",
     "cacheKey": "script_tvphim"
   },
   {
     "pattern": "anime",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/anime.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/anime.js?ref=main",
     "cacheKey": "script_anime"
   },
   {
     "pattern": "\\.?bbc\\.com$",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/bbc.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/bbc.js?ref=main",
     "cacheKey": "script_bbc"
   },
   {
     "pattern": "nettruyenvie",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/nettruyenvie.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/nettruyenvie.js?ref=main",
     "cacheKey": "script_nettruyenvie"
   },
   {
     "pattern": "truyenfull",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/truyenfull.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/truyenfull.js?ref=main",
     "cacheKey": "script_truyenfull"
   },
   {
     "pattern": "\\.?douyin\\.com$",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/douyin.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/douyin.js?ref=main",
     "cacheKey": "script_douyin"
   },
   {
     "pattern": "\\.?fptshop\\.com\\.vn$",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/fptshop.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/fptshop.js?ref=main",
     "cacheKey": "script_fptshop"
   },
   {
     "pattern": "hhpanda",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/hhpanda.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/hhpanda.js?ref=main",
     "cacheKey": "script_hhpanda"
   },
   {
     "pattern": "nangcuc",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/nangcuc.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/nangcuc.js?ref=main",
     "cacheKey": "script_nangcuc"
   },
   {
     "pattern": "hhchina",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/hhchina.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/hhchina.js?ref=main",
     "cacheKey": "script_hhchina"
   },
   {
     "pattern": "tv3dhay",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/tv3dhay.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/tv3dhay.js?ref=main",
     "cacheKey": "script_tv3dhay"
   },
   {
     "pattern": "phimnhua",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/phimnhua.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/phimnhua.js?ref=main",
     "cacheKey": "script_phimnhua"
   },
   {
     "pattern": "apkpure",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/apkpure.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/apkpure.js?ref=main",
     "cacheKey": "script_apkpure"
   },
   {
     "pattern": "vietsubtv",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/vietsubtv.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/vietsubtv.js?ref=main",
     "cacheKey": "script_vietsubtv"
   },
   {
     "pattern": "\\.?apkmirror\\.com$",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/apkmirror.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/apkmirror.js?ref=main",
     "cacheKey": "script_apkmirror"
   },
   {
     "pattern": "\\.?uptodown\\.com$",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/uptodown.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/uptodown.js?ref=main",
     "cacheKey": "script_uptodown"
   },
   {
     "pattern": "motchill|motchiill|ohaytv",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/motchill.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/motchill.js?ref=main",
     "cacheKey": "script_motchill"
   },
   {
     "pattern": "\\.?soha\\.vn$",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/soha.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/soha.js?ref=main",
     "cacheKey": "script_soha"
   },
   {
     "pattern": "hoathinh3d|hh3d|hhtq|hhninja|phimhoathinh3d",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/hh3d.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/hh3d.js?ref=main",
     "cacheKey": "script_hh3d"
   },
   {
     "pattern": "cakeo|thapcam|vebo|90phut|xoilac|banhkhuc",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/xembongdalau.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/xembongdalau.js?ref=main",
     "cacheKey": "script_xembongdalau"
   },
   {
     "pattern": "phimmoi|phimmoi\\.|phimmoiday|daophimtrung",
-    "url": "https://luxysiv.github.io/anti-ads/scripts/phimmoi.js",
+    "url": "https://api.github.com/repos/luxysiv/anti-ads/contents/scripts/phimmoi.js?ref=main",
     "cacheKey": "script_phimmoi"
   }
 ]
