@@ -3,7 +3,7 @@ const css = `
     .center-screen.backdrop,
     .turnoff-catfish,
     .img-fluid,
-    [src="/push/*.gif"] {
+    [src*="/push/"][src$=".gif"] {
        display: none !important;
     }
 `;
