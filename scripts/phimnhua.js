@@ -1,7 +1,9 @@
 // CSS rules to hide ad elements
 const css = ` 
     .center-screen.backdrop,
-    .turnoff-catfish {
+    .turnoff-catfish,
+    .img-fluid,
+    [src="/push/*.gif"] {
        display: none !important;
     }
 `;
